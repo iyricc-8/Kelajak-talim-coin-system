@@ -14,6 +14,7 @@ csrf = CSRFProtect()
 
 
 def create_app(config_class=None):
+    from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting
     app = Flask(__name__)
     if config_class is None:
         config_name = os.environ.get('FLASK_CONFIG') or os.environ.get('APP_ENV')
@@ -57,6 +58,7 @@ def create_app(config_class=None):
     @app.cli.command('seed')
     def seed_command():
         """Seed database with initial data."""
+        from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting
         with app.app_context():
             db.create_all()
             _ensure_user_economy_columns()
