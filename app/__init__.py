@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from config import Config
+from config import Config, config as config_map
 from sqlalchemy import inspect, text
 import os
 
@@ -13,12 +13,23 @@ migrate = Migrate()
 csrf = CSRFProtect()
 
 
-def create_app(config_class=Config):
+def create_app(config_class=None):
     app = Flask(__name__)
+    if config_class is None:
+        config_name = os.environ.get('FLASK_CONFIG') or os.environ.get('APP_ENV')
+        if not config_name:
+            vercel_env = os.environ.get('VERCEL_ENV')
+            if vercel_env == 'production':
+                config_name = 'production'
+            elif vercel_env in ('preview', 'development'):
+                config_name = 'development'
+        config_name = config_name or 'default'
+        config_class = config_map.get(config_name, Config)
     app.config.from_object(config_class)
 
-    # Ensure upload folder exists
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    # Ensure upload folder exists for local/dev
+    if app.config.get('ENABLE_LOCAL_UPLOADS', False):
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     # Initialize extensions
     db.init_app(app)
@@ -43,12 +54,23 @@ def create_app(config_class=Config):
     app.register_blueprint(admin_bp)
     app.register_blueprint(transactions_bp)
 
-    # Create tables and seed data
-    with app.app_context():
-        db.create_all()
-        _ensure_user_economy_columns()
-        _seed_economy_settings()
-        _seed_initial_data()
+    @app.cli.command('seed')
+    def seed_command():
+        """Seed database with initial data."""
+        with app.app_context():
+            db.create_all()
+            _ensure_user_economy_columns()
+            _seed_economy_settings()
+            _seed_initial_data()
+        print('Seed completed.')
+
+    # Create tables and seed data (dev only)
+    if app.config.get('INIT_DB_ON_STARTUP', False):
+        with app.app_context():
+            db.create_all()
+            _ensure_user_economy_columns()
+            _seed_economy_settings()
+            _seed_initial_data()
 
     return app
 
