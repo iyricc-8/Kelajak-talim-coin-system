@@ -86,11 +86,13 @@
 
     <!-- Main Content -->
     <main class="flex-1 min-w-0 lg:ml-0 pb-20 lg:pb-0">
-        <!-- Mobile header (Glassmorphism) -->
-        <header class="lg:hidden bg-white/85 backdrop-blur-md border-b border-slate-100/50 px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+        <!-- Mobile header (Glassmorphism Dark) -->
+        <header class="lg:hidden bg-slate-900/80 backdrop-blur-lg border-b border-slate-800 px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-lg">
             <div class="flex items-center gap-2.5">
-                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg shadow-sm object-cover">
-                <span class="font-bold text-slate-800 text-base tracking-tight">Kelajak Ta'lim</span>
+                <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-full h-full object-contain">
+                </div>
+                <span class="font-bold text-slate-100 text-base tracking-tight">Kelajak Ta'lim</span>
             </div>
             <div class="flex items-center gap-3">
                 <a href="{{ url_for('student.notifications') }}" class="relative p-1">
@@ -112,27 +114,27 @@
     </main>
 
     <!-- Mobile Bottom Navigation (App-like) -->
-    <nav class="lg:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-100 z-40 transition-transform duration-300" style="padding-bottom: env(safe-area-inset-bottom);">
+    <nav class="lg:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 z-40 transition-transform duration-300 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]" style="padding-bottom: env(safe-area-inset-bottom);">
         <div class="flex justify-around items-center h-16 px-1">
-            <a href="{{ url_for('student.dashboard') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.dashboard' %}text-brand-600{% else %}text-slate-400 hover:text-slate-600{% endif %}">
-                <span class="text-xl transition-transform {% if request.endpoint == 'student.dashboard' %}scale-110{% endif %}">🏠</span>
-                <span class="text-[10px] font-semibold">Asosiy</span>
+            <a href="{{ url_for('student.dashboard') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.dashboard' %}text-brand-400{% else %}text-slate-400 hover:text-slate-200{% endif %}">
+                <span class="text-2xl transition-transform {% if request.endpoint == 'student.dashboard' %}scale-110{% endif %}">🏠</span>
+                <span class="text-[11px] font-semibold">Asosiy</span>
             </a>
-            <a href="{{ url_for('store.store') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'store.store' %}text-brand-600{% else %}text-slate-400 hover:text-slate-600{% endif %}">
-                <span class="text-xl transition-transform {% if request.endpoint == 'store.store' %}scale-110{% endif %}">🛍️</span>
-                <span class="text-[10px] font-semibold">Do'kon</span>
+            <a href="{{ url_for('store.store') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'store.store' %}text-brand-400{% else %}text-slate-400 hover:text-slate-200{% endif %}">
+                <span class="text-2xl transition-transform {% if request.endpoint == 'store.store' %}scale-110{% endif %}">🛍️</span>
+                <span class="text-[11px] font-semibold">Do'kon</span>
             </a>
-            <a href="{{ url_for('student.leaderboard') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.leaderboard' %}text-brand-600{% else %}text-slate-400 hover:text-slate-600{% endif %}">
-                <span class="text-xl transition-transform {% if request.endpoint == 'student.leaderboard' %}scale-110{% endif %}">⭐</span>
-                <span class="text-[10px] font-semibold">Reyting</span>
+            <a href="{{ url_for('student.leaderboard') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.leaderboard' %}text-brand-400{% else %}text-slate-400 hover:text-slate-200{% endif %}">
+                <span class="text-2xl transition-transform {% if request.endpoint == 'student.leaderboard' %}scale-110{% endif %}">⭐</span>
+                <span class="text-[11px] font-semibold">Reyting</span>
             </a>
-            <a href="{{ url_for('student.profile') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.profile' %}text-brand-600{% else %}text-slate-400 hover:text-slate-600{% endif %}">
-                <span class="text-xl transition-transform {% if request.endpoint == 'student.profile' %}scale-110{% endif %}">👤</span>
-                <span class="text-[10px] font-semibold">Profil</span>
+            <a href="{{ url_for('student.profile') }}" class="flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors {% if request.endpoint == 'student.profile' %}text-brand-400{% else %}text-slate-400 hover:text-slate-200{% endif %}">
+                <span class="text-2xl transition-transform {% if request.endpoint == 'student.profile' %}scale-110{% endif %}">👤</span>
+                <span class="text-[11px] font-semibold">Profil</span>
             </a>
-            <button onclick="toggleSidebar()" class="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-400 hover:text-slate-600 transition-colors">
-                <span class="text-xl">☰</span>
-                <span class="text-[10px] font-semibold">Menyu</span>
+            <button onclick="toggleSidebar()" class="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-400 hover:text-slate-200 transition-colors">
+                <span class="text-2xl">☰</span>
+                <span class="text-[11px] font-semibold">Menyu</span>
             </button>
         </div>
     </nav>
