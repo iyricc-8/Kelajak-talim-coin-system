@@ -6,12 +6,12 @@
         <!-- Logo -->
         <div class="p-6 border-b border-slate-100">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl gradient-coin flex items-center justify-center shadow">
-                    <span class="text-xl">🪙</span>
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <p class="font-bold text-slate-800 text-sm leading-tight">Coin System</p>
-                    <p class="text-xs text-slate-400">Kelajak Talim</p>
+                    <p class="font-bold text-slate-800 text-sm leading-tight">Kelajak Ta'lim</p>
+                    <p class="text-xs text-slate-400">Coin System</p>
                 </div>
             </div>
         </div>
@@ -92,8 +92,8 @@
                 <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <span class="text-lg">🪙</span>
-                <span class="font-bold text-slate-800 text-sm">Coin System</span>
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
+                <span class="font-bold text-slate-800 text-sm">Kelajak Ta'lim</span>
             </div>
             <div class="ml-auto flex items-center gap-2">
                 <span class="coin-badge text-xs font-bold px-2.5 py-1 rounded-full text-white">{{ current_user.coin_balance }} 🪙</span>
