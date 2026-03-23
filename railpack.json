@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.railpack.com",
   "deploy": {
-    "startCommand": "gunicorn wsgi:app --bind 0.0.0.0:$PORT"
+    "startCommand": "FLASK_APP=wsgi.py flask db upgrade && FLASK_APP=wsgi.py flask seed && gunicorn wsgi:app --bind 0.0.0.0:$PORT"
   }
 }
