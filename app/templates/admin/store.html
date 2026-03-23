@@ -1,0 +1,154 @@
+{% extends "admin/layout.html" %}
+{% block page_title %}Do'kon boshqaruvi{% endblock %}
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div>
+        <h2 class="text-lg font-bold text-slate-800">Mahsulotlar</h2>
+        <p class="text-sm text-slate-400">Jami: {{ stats.total }} - Faol: {{ stats.active }} - Faol emas: {{ stats.inactive }}</p>
+    </div>
+    <div class="flex gap-3">
+        <a href="{{ url_for('admin.categories') }}" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-300">Kategoriyalar</a>
+        <a href="{{ url_for('admin.create_product') }}" class="px-4 py-2 gradient-brand text-white rounded-xl text-sm font-semibold hover:opacity-90">+ Yangi mahsulot</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+        <p class="text-xs text-slate-400">Jami</p>
+        <p class="text-xl font-bold text-slate-800">{{ stats.total }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+        <p class="text-xs text-slate-400">Faol</p>
+        <p class="text-xl font-bold text-emerald-600">{{ stats.active }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+        <p class="text-xs text-slate-400">Faol emas</p>
+        <p class="text-xl font-bold text-red-500">{{ stats.inactive }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+        <p class="text-xs text-slate-400">Kam qoldi</p>
+        <p class="text-xl font-bold text-amber-600">{{ stats.low }}</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+        <p class="text-xs text-slate-400">Tugagan</p>
+        <p class="text-xl font-bold text-red-500">{{ stats.out }}</p>
+    </div>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6">
+    <form method="GET" class="grid grid-cols-1 md:grid-cols-6 gap-3">
+        <div class="md:col-span-2">
+            <input type="text" name="q" value="{{ search }}" placeholder="Mahsulot nomi yoki tavsif"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-slate-50 text-sm">
+        </div>
+        <select name="category" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400">
+            <option value="">Barcha kategoriyalar</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="status" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400">
+            <option value="" {% if not status %}selected{% endif %}>Holat</option>
+            <option value="active" {% if status == 'active' %}selected{% endif %}>Faol</option>
+            <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Faol emas</option>
+        </select>
+        <select name="stock" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400">
+            <option value="" {% if not stock %}selected{% endif %}>Ombor</option>
+            <option value="low" {% if stock == 'low' %}selected{% endif %}>Kam qoldi</option>
+            <option value="out" {% if stock == 'out' %}selected{% endif %}>Tugagan</option>
+        </select>
+        <div class="md:col-span-2 flex gap-2">
+            <button type="submit" class="px-5 py-2.5 gradient-brand text-white rounded-xl text-sm font-semibold hover:opacity-90 transition">Filtrlash</button>
+            <a href="{{ url_for('admin.store') }}" class="px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-300">Tozalash</a>
+        </div>
+    </form>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Mahsulot</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Kategoriya</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Narx</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Ombor</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Holat</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for product in products.items %}
+                <tr class="hover:bg-slate-50 transition {% if not product.is_active %}opacity-70{% endif %}">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0">
+                                {% if product.image %}
+                                <img src="{{ url_for('static', filename=product.image) }}" class="w-full h-full object-cover" alt="{{ product.title }}">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-sm text-slate-400">No image</div>
+                                {% endif %}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-slate-800 truncate">{{ product.title }}</p>
+                                <p class="text-xs text-slate-400">ID #{{ product.id }} - {{ product.created_at.strftime('%d.%m.%Y') }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                            {{ product.category.name if product.category else 'Kategoriyasiz' }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-coin-600">{{ product.price_coin }} Coin</td>
+                    <td class="px-6 py-4">
+                        {% if product.stock == 0 %}
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-600">Tugagan</span>
+                        {% elif product.stock <= 5 %}
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Kam: {{ product.stock }}</span>
+                        {% else %}
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{{ product.stock }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium {% if product.is_active %}bg-emerald-100 text-emerald-700{% else %}bg-red-100 text-red-600{% endif %}">
+                            {% if product.is_active %}Faol{% else %}Faol emas{% endif %}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-2 justify-end">
+                            <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="text-xs px-3 py-1 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg font-medium">Tahrirlash</a>
+                            <form method="POST" action="{{ url_for('admin.toggle_product', product_id=product.id) }}" class="inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="text-xs px-3 py-1 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg font-medium">{% if product.is_active %}Yashirish{% else %}Ko'rsatish{% endif %}</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin.delete_product', product_id=product.id) }}" class="inline" onsubmit="return confirm('Mahsulotni o'chirmoqchimisiz?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="text-xs px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium">O'chirish</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="px-6 py-10 text-center text-slate-400">Mahsulot topilmadi</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if products.pages > 1 %}
+<div class="flex justify-center gap-2 mt-6">
+    {% for p in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+    {% if p %}
+    <a href="{{ url_for('admin.store', page=p, q=search, category=selected_category, status=status, stock=stock) }}"
+        class="w-9 h-9 rounded-lg flex items-center justify-center text-sm {% if p == products.page %}gradient-brand text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">{{ p }}</a>
+    {% else %}
+    <span class="px-2 text-slate-400">...</span>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

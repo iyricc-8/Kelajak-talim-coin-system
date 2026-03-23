@@ -1,0 +1,76 @@
+{% extends "student/layout.html" %}
+{% block title %}Reyting{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">⭐ O'quvchilar reytingi</h1>
+    <p class="text-slate-500 text-sm mt-1">Coin bo'yicha top o'quvchilar</p>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {% if top_users %}
+    <!-- Top 3 podium -->
+    {% if top_users|length >= 3 %}
+    <div class="p-6 bg-gradient-to-br from-slate-50 to-coin-50 grid grid-cols-3 gap-4 items-end">
+        <!-- 2nd -->
+        <div class="text-center">
+            {% set u2, b2 = top_users[1] %}
+            <div class="w-12 h-12 rounded-full gradient-brand flex items-center justify-center text-white font-bold mx-auto border-4 border-slate-300 shadow mb-2">
+                {% if u2.avatar %}<img src="{{ url_for('static', filename=u2.avatar) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u2.first_name[0] }}{% endif %}
+            </div>
+            <span class="text-2xl">🥈</span>
+            <p class="text-sm font-bold text-slate-800 truncate">{{ u2.first_name }}</p>
+            <p class="text-xs font-semibold text-coin-600">{{ b2 }} 🪙</p>
+        </div>
+        <!-- 1st -->
+        <div class="text-center order-first md:order-none -mb-2">
+            {% set u1, b1 = top_users[0] %}
+            <div class="w-16 h-16 rounded-full gradient-coin flex items-center justify-center text-white font-bold mx-auto border-4 border-coin-300 shadow-lg mb-2">
+                {% if u1.avatar %}<img src="{{ url_for('static', filename=u1.avatar) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u1.first_name[0] }}{% endif %}
+            </div>
+            <span class="text-3xl">🥇</span>
+            <p class="text-sm font-bold text-slate-800 truncate">{{ u1.first_name }}</p>
+            <p class="text-xs font-semibold text-coin-600">{{ b1 }} 🪙</p>
+        </div>
+        <!-- 3rd -->
+        <div class="text-center">
+            {% set u3, b3 = top_users[2] %}
+            <div class="w-11 h-11 rounded-full bg-amber-700 flex items-center justify-center text-white font-bold mx-auto border-4 border-amber-200 shadow mb-2">
+                {% if u3.avatar %}<img src="{{ url_for('static', filename=u3.avatar) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u3.first_name[0] }}{% endif %}
+            </div>
+            <span class="text-2xl">🥉</span>
+            <p class="text-sm font-bold text-slate-800 truncate">{{ u3.first_name }}</p>
+            <p class="text-xs font-semibold text-coin-600">{{ b3 }} 🪙</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Full list -->
+    <div class="divide-y divide-slate-50">
+        {% for user, balance in top_users %}
+        <div class="flex items-center gap-4 px-6 py-3.5 {% if user.id == current_user.id %}bg-brand-50{% else %}hover:bg-slate-50{% endif %} transition">
+            <span class="w-8 text-center font-bold
+                {% if loop.index == 1 %}text-coin-500 text-lg
+                {% elif loop.index == 2 %}text-slate-600 text-base
+                {% elif loop.index == 3 %}text-amber-700 text-base
+                {% else %}text-slate-400 text-sm{% endif %}">
+                {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+            </span>
+            <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white text-sm font-bold border-2 {% if user.id == current_user.id %}border-brand-400{% else %}border-slate-200{% endif %}">
+                {% if user.avatar %}<img src="{{ url_for('static', filename=user.avatar) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ user.first_name[0] }}{% endif %}
+            </div>
+            <div class="flex-1">
+                <p class="text-sm font-semibold text-slate-800">{{ user.full_name }} {% if user.id == current_user.id %}<span class="text-xs text-brand-500 font-medium">(Siz)</span>{% endif %}</p>
+                <p class="text-xs text-slate-400">@{{ user.username }}</p>
+            </div>
+            <span class="font-bold text-coin-600 text-sm">{{ balance }} 🪙</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16">
+        <span class="text-5xl block mb-3">📭</span>
+        <p class="text-slate-400">Reyting hozircha bo'sh</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

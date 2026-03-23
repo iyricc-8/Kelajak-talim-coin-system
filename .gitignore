@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Local databases / data
+*.db
+*.sqlite3
+instance/
+
+# User uploads (local)
+app/static/uploads/
+
+# OS
+.DS_Store
+Thumbs.db

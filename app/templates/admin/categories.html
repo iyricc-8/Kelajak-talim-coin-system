@@ -1,0 +1,47 @@
+{% extends "admin/layout.html" %}
+{% block page_title %}Mahsulot kategoriyalari{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Add form -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <h2 class="font-bold text-slate-800 mb-4">+ Yangi kategoriya</h2>
+        <form method="POST" class="space-y-3">
+            {{ form.hidden_tag() }}
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nomi</label>
+                {{ form.name(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm") }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Tavsif</label>
+                {{ form.description(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none", rows=2) }}
+            </div>
+            <button type="submit" class="px-6 py-2.5 gradient-brand text-white font-semibold rounded-xl hover:opacity-90">Yaratish</button>
+        </form>
+    </div>
+
+    <!-- List -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <h2 class="font-bold text-slate-800 mb-4">Kategoriyalar ({{ categories|length }})</h2>
+        <div class="space-y-2">
+            {% for cat in categories %}
+            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                <span class="text-lg">K</span>
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-slate-800">{{ cat.name }}</p>
+                    <p class="text-xs text-slate-400">{{ cat.products.count() }} mahsulot{% if cat.description %} - {{ cat.description[:50] }}{% endif %}</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('admin.edit_category', category_id=cat.id) }}" class="text-xs px-3 py-1 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg font-medium">Tahrirlash</a>
+                    <form method="POST" action="{{ url_for('admin.delete_category', category_id=cat.id) }}" class="inline" onsubmit="return confirm('Kategoriyani o\'chirmoqchimisiz?')">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="text-xs px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium">O'chirish</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-slate-400 text-sm">Kategoriyalar yo'q</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

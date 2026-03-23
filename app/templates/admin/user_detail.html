@@ -1,0 +1,134 @@
+{% extends "admin/layout.html" %}
+{% block page_title %}Profil: {{ user.full_name }}{% endblock %}
+{% block content %}
+<div class="mb-4">
+    <a href="{{ url_for('admin.users') }}" class="text-brand-600 text-sm hover:underline">← Foydalanuvchilarga qaytish</a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- User Info Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="text-center mb-5">
+            <div class="w-16 h-16 rounded-full gradient-brand flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 border-4 border-brand-200 shadow">{{ user.first_name[0] }}</div>
+            <h2 class="font-bold text-slate-800">{{ user.full_name }}</h2>
+            <p class="text-sm text-slate-400">@{{ user.username }}</p>
+        </div>
+        <div class="p-3 gradient-coin rounded-xl text-white text-center mb-4">
+            <p class="text-xs opacity-80">Balans</p>
+            <p class="text-2xl font-extrabold">{{ user.coin_balance }} 🪙</p>
+        </div>
+
+        <!-- Edit form -->
+        {% if current_user.is_admin() %}
+        <form method="POST" class="space-y-3">
+            {{ form.hidden_tag() }}
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-medium text-slate-600">Ism</label>
+                    {{ form.first_name(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+                    {% for error in form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-slate-600">Familiya</label>
+                    {{ form.last_name(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+                    {% for error in form.last_name.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+            <div>
+                <label class="text-xs font-medium text-slate-600">Login</label>
+                {{ form.username(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+                {% for error in form.username.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                <label class="text-xs font-medium text-slate-600">Email</label>
+                {{ form.email(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+                {% for error in form.email.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                <label class="text-xs font-medium text-slate-600">Yangi parol</label>
+                {{ form.password(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1", placeholder="Agar kerak bo'lsa kiriting") }}
+                <p class="text-xs text-slate-400 mt-1">Parolni o'zgartirmoqchi bo'lmasangiz, bo'sh qoldiring.</p>
+                {% for error in form.password.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                <label class="text-xs font-medium text-slate-600">Parolni tasdiqlang</label>
+                {{ form.confirm_password(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+                {% for error in form.confirm_password.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+            </div>
+            <div>
+                <label class="text-xs font-medium text-slate-600">Rol</label>
+                {{ form.role(class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-50 mt-1") }}
+            </div>
+            <div class="flex items-center gap-2">
+                {{ form.is_active(class="rounded") }}
+                <label class="text-sm text-slate-600">Faol</label>
+            </div>
+            <button type="submit" class="w-full py-2 gradient-brand text-white rounded-xl text-sm font-semibold hover:opacity-90">Saqlash</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Right side -->
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Award/Deduct -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <h3 class="font-bold text-slate-800 mb-4">💰 Coin boshqaruvi</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Award -->
+                <form method="POST" action="{{ url_for('admin.coins') }}" class="space-y-2 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                    <input type="hidden" name="action" value="award">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <p class="text-sm font-semibold text-emerald-700">💚 Coin hisoblash</p>
+                    <input type="number" name="amount" placeholder="Miqdor" min="1" max="10000" required class="w-full px-3 py-2 rounded-lg border border-emerald-200 text-sm bg-white">
+                    <input type="text" name="reason" placeholder="Sabab" required class="w-full px-3 py-2 rounded-lg border border-emerald-200 text-sm bg-white">
+                    <button type="submit" class="w-full py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700">Hisoblash</button>
+                </form>
+                <!-- Deduct -->
+                <form method="POST" action="{{ url_for('admin.coins') }}" class="space-y-2 p-4 bg-red-50 rounded-xl border border-red-200">
+                    <input type="hidden" name="action" value="deduct">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <p class="text-sm font-semibold text-red-600">🔴 Coin yechish</p>
+                    <input type="number" name="amount" placeholder="Miqdor" min="1" max="10000" required class="w-full px-3 py-2 rounded-lg border border-red-200 text-sm bg-white">
+                    <input type="text" name="reason" placeholder="Sabab" required class="w-full px-3 py-2 rounded-lg border border-red-200 text-sm bg-white">
+                    <button type="submit" class="w-full py-2 bg-red-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600">Yechish</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        {% if current_user.is_admin() and user.role != 'admin' %}
+        <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-5">
+            <h3 class="font-bold text-red-700 mb-2">Xavfli zona</h3>
+            <p class="text-sm text-slate-500 mb-4">Bu foydalanuvchi akkauntini va barcha ma'lumotlarini butunlay o'chiradi.</p>
+            <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('Haqiqatan ham foydalanuvchini o\\'chirmoqchimisiz? Bu amalni ortga qaytarib bo\\'lmaydi.')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700">Foydalanuvchini o'chirish</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Recent Transactions -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div class="p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800">So'nggi tranzaksiyalar</h3>
+            </div>
+            <div class="divide-y divide-slate-50">
+                {% for txn in recent_txns %}
+                <div class="flex items-center gap-3 px-5 py-3">
+                    <span class="text-lg">{% if txn.type == 'earn' %}💚{% elif txn.type == 'spend' %}🔴{% else %}⚙️{% endif %}</span>
+                    <div class="flex-1">
+                        <p class="text-sm text-slate-800">{{ txn.reason }}</p>
+                        <p class="text-xs text-slate-400">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                    </div>
+                    <span class="font-bold text-sm {% if txn.type == 'earn' %}text-emerald-600{% else %}text-red-500{% endif %}">
+                        {% if txn.type == 'earn' %}+{% else %}−{% endif %}{{ txn.amount }} 🪙
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

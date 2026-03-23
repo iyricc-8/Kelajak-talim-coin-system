@@ -1,0 +1,99 @@
+{% extends "admin/layout.html" %}
+{% block page_title %}Bosh sahifa{% endblock %}
+{% block content %}
+<!-- Stats -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center text-xl">👥</div>
+            <p class="text-sm font-medium text-slate-500">O'quvchilar</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ total_users }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-coin-100 flex items-center justify-center text-xl">🪙</div>
+            <p class="text-sm font-medium text-slate-500">Coin aylanmasi</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ total_coins }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-xl">📦</div>
+            <p class="text-sm font-medium text-slate-500">Buyurtmalar</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ total_orders }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-xl">⏳</div>
+            <p class="text-sm font-medium text-slate-500">Ko'rib chiqilmoqda</p>
+        </div>
+        <p class="text-3xl font-extrabold text-amber-600">{{ pending_orders }}</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Recent Transactions -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="font-bold text-slate-800">So'nggi tranzaksiyalar</h2>
+            <a href="{{ url_for('admin.transactions') }}" class="text-brand-600 text-sm hover:underline">Barchasi →</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="text-left px-5 py-3 text-xs text-slate-500 font-semibold">O'quvchi</th>
+                        <th class="text-left px-5 py-3 text-xs text-slate-500 font-semibold">Tur</th>
+                        <th class="text-left px-5 py-3 text-xs text-slate-500 font-semibold">Miqdor</th>
+                        <th class="text-left px-5 py-3 text-xs text-slate-500 font-semibold">Sana</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for txn in recent_transactions %}
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-5 py-3 text-sm font-medium text-slate-800">{{ txn.user.full_name }}</td>
+                        <td class="px-5 py-3">
+                            <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold
+                                {% if txn.type == 'earn' %}bg-emerald-100 text-emerald-700
+                                {% elif txn.type == 'spend' %}bg-red-100 text-red-700
+                                {% else %}bg-slate-100 text-slate-600{% endif %}">
+                                {% if txn.type == 'earn' %}+{% elif txn.type in ['spend','penalty'] %}−{% endif %}
+                            </span>
+                        </td>
+                        <td class="px-5 py-3 text-sm font-bold {% if txn.type == 'earn' %}text-emerald-600{% else %}text-red-500{% endif %}">{{ txn.amount }} 🪙</td>
+                        <td class="px-5 py-3 text-xs text-slate-400">{{ txn.created_at.strftime('%d.%m %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="font-bold text-slate-800">Yangi foydalanuvchilar</h2>
+            <a href="{{ url_for('admin.users') }}" class="text-brand-600 text-sm hover:underline">Barchasi →</a>
+        </div>
+        <div class="divide-y divide-slate-50">
+            {% for user in recent_users %}
+            <div class="flex items-center gap-3 px-5 py-3">
+                <div class="w-8 h-8 rounded-full gradient-brand flex items-center justify-center text-white text-sm font-bold">{{ user.first_name[0] }}</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-slate-800 truncate">{{ user.full_name }}</p>
+                    <p class="text-xs text-slate-400">{{ user.created_at.strftime('%d.%m.%Y') }}</p>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded-full
+                    {% if user.role == 'admin' %}bg-brand-100 text-brand-700
+                    {% elif user.role == 'teacher' %}bg-amber-100 text-amber-700
+                    {% else %}bg-emerald-100 text-emerald-700{% endif %}">
+                    {% if user.role == 'admin' %}Administrator{% elif user.role == 'teacher' %}O'qituvchi{% else %}O'quvchi{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

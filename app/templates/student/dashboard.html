@@ -1,0 +1,165 @@
+{% extends "student/layout.html" %}
+{% block title %}Bosh sahifa{% endblock %}
+{% block content %}
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-800">Xush kelibsiz, {{ current_user.first_name }}! 👋</h1>
+    <p class="text-slate-500 text-sm mt-1">Bugungi progressingiz</p>
+</div>
+
+<!-- Stats Row -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <!-- Balance card -->
+    <div class="col-span-2 lg:col-span-1 gradient-coin rounded-2xl p-5 text-white shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">🪙</span>
+            <p class="text-sm font-medium opacity-80">Balans</p>
+        </div>
+        <p class="text-3xl font-extrabold">{{ current_user.coin_balance }}</p>
+        <p class="text-xs font-medium opacity-70 mt-1">Coin</p>
+    </div>
+
+    <!-- Rank -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">⭐</span>
+            <p class="text-sm font-medium text-slate-500">O'rin</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ rank or '—' }}</p>
+        <p class="text-xs text-slate-400 mt-1">reytingda</p>
+    </div>
+
+    <!-- Achievements -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">🏆</span>
+            <p class="text-sm font-medium text-slate-500">Yutuqlar</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ user_achievements|length }}</p>
+        <p class="text-xs text-slate-400 mt-1">olingan</p>
+    </div>
+
+    <!-- Notifications -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">🔔</span>
+            <p class="text-sm font-medium text-slate-500">Bildirishnomalar</p>
+        </div>
+        <p class="text-3xl font-extrabold text-slate-800">{{ current_user.unread_notifications_count }}</p>
+        <p class="text-xs text-slate-400 mt-1">o'qilmagan</p>
+    </div>
+</div>
+
+<!-- Main Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Recent Transactions -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="font-bold text-slate-800">📋 So'nggi operatsiyalar</h2>
+            <a href="{{ url_for('transactions.transactions') }}" class="text-brand-600 text-sm font-medium hover:underline">Barchasi →</a>
+        </div>
+        {% if recent_txns %}
+        <div class="space-y-3">
+            {% for txn in recent_txns %}
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg
+                    {% if txn.type == 'earn' %}bg-emerald-100{% elif txn.type == 'spend' %}bg-red-100{% else %}bg-slate-200{% endif %}">
+                    {% if txn.type == 'earn' %}💚{% elif txn.type == 'spend' %}🔴{% else %}⚙️{% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-slate-800 truncate">{{ txn.reason }}</p>
+                    <p class="text-xs text-slate-400">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                </div>
+                <span class="text-sm font-bold {% if txn.type == 'earn' %}text-emerald-600{% elif txn.type == 'spend' %}text-red-500{% else %}text-slate-600{% endif %}">
+                    {% if txn.type == 'earn' %}+{% elif txn.type == 'spend' %}−{% endif %}{{ txn.amount }} 🪙
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8 text-slate-400">
+            <span class="text-4xl block mb-2">📭</span>
+            <p class="text-sm">Hozircha operatsiyalar yo'q</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-6">
+        <!-- Achievements -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-bold text-slate-800">🏅 Yutuqlar</h2>
+                <a href="{{ url_for('student.achievements') }}" class="text-brand-600 text-sm font-medium hover:underline">Barchasi →</a>
+            </div>
+            {% if user_achievements %}
+            <div class="flex flex-wrap gap-2">
+                {% for ua in user_achievements %}
+                <span class="text-2xl" title="{{ ua.achievement.title }}">{{ ua.achievement.icon }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-slate-400 text-sm">Hozircha yutuq yo'q. Coin ishlang!</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-bold text-slate-800">📦 Mening buyurtmalarim</h2>
+                <a href="{{ url_for('student.orders') }}" class="text-brand-600 text-sm font-medium hover:underline">Barchasi →</a>
+            </div>
+            {% if recent_orders %}
+            <div class="space-y-2">
+                {% for order in recent_orders %}
+                <div class="p-3 rounded-xl bg-slate-50 text-sm">
+                    <p class="font-medium text-slate-800 truncate">{{ order.product.title }}</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="text-xs text-slate-400">{{ order.created_at.strftime('%d.%m.%Y') }}</span>
+                        <span class="text-xs px-2 py-0.5 rounded-full font-medium
+                            {% if order.status == 'new' %}bg-blue-100 text-blue-700
+                            {% elif order.status == 'confirmed' %}bg-amber-100 text-amber-700
+                            {% elif order.status == 'delivered' %}bg-emerald-100 text-emerald-700
+                            {% else %}bg-red-100 text-red-700{% endif %}">
+                            {% if order.status == 'new' %}Yangi{% elif order.status == 'confirmed' %}Tasdiqlangan{% elif order.status == 'delivered' %}Berildi{% else %}Bekor qilingan{% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-slate-400 text-sm">Buyurtmalar yo'q. <a href="{{ url_for('store.store') }}" class="text-brand-600 hover:underline">Do'konga o'tish</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Popular Products -->
+<div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <div class="flex items-center justify-between mb-5">
+        <h2 class="font-bold text-slate-800">🛍️ Ommabop mahsulotlar</h2>
+        <a href="{{ url_for('store.store') }}" class="text-brand-600 text-sm font-medium hover:underline">Butun do'kon →</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {% for product in popular_products %}
+        <a href="{{ url_for('store.product_detail', product_id=product.id) }}" class="group block p-4 rounded-2xl border border-slate-100 hover:border-brand-200 hover:shadow-md transition-all duration-200">
+            <div class="w-full h-24 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-3 group-hover:from-brand-50 group-hover:to-coin-50 transition-all">
+                {% if product.image %}
+                <img src="{{ url_for('static', filename=product.image) }}" class="w-full h-full object-cover rounded-xl" alt="{{ product.title }}">
+                {% else %}
+                <span class="text-3xl">🎁</span>
+                {% endif %}
+            </div>
+            <p class="text-sm font-semibold text-slate-800 leading-tight truncate">{{ product.title }}</p>
+            <div class="flex items-center justify-between mt-2">
+                <span class="text-xs font-bold text-coin-600 bg-coin-50 px-2 py-0.5 rounded-full">{{ product.price_coin }} 🪙</span>
+                {% if current_user.coin_balance < product.price_coin %}
+                <span class="text-xs text-red-400">Yetmaydi</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "student/layout.html" %}
+{% block title %}Tranzaksiyalar{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">📋 Tranzaksiyalar tarixi</h1>
+    <p class="text-slate-500 text-sm mt-1">Balansingiz bo'yicha barcha operatsiyalar</p>
+</div>
+
+<!-- Filter -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6 flex flex-wrap gap-2">
+    <a href="{{ url_for('transactions.transactions') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if not txn_type %}bg-brand-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">Barchasi</a>
+    <a href="{{ url_for('transactions.transactions', type='earn') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'earn' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">💚 Hisoblash</a>
+    <a href="{{ url_for('transactions.transactions', type='spend') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'spend' %}bg-red-500 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">🔴 Hisobdan yechish</a>
+    <a href="{{ url_for('transactions.transactions', type='adjustment') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'adjustment' %}bg-slate-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">⚙️ Tuzatishlar</a>
+</div>
+
+<!-- Transactions Table -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {% if txns.items %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sana</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tur</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Miqdor</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sabab</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Balans</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for txn in txns.items %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">{{ txn.created_at.strftime('%d.%m.%Y') }}<br>{{ txn.created_at.strftime('%H:%M') }}</td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+                            {% if txn.type == 'earn' %}bg-emerald-100 text-emerald-700
+                            {% elif txn.type == 'spend' %}bg-red-100 text-red-700
+                            {% elif txn.type == 'penalty' %}bg-orange-100 text-orange-700
+                            {% else %}bg-slate-100 text-slate-600{% endif %}">
+                            {% if txn.type == 'earn' %}💚 Hisoblash
+                            {% elif txn.type == 'spend' %}🔴 Xarid
+                            {% elif txn.type == 'penalty' %}⚠️ Jarima
+                            {% else %}⚙️ Tuzatish{% endif %}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-base {% if txn.type == 'earn' %}text-emerald-600{% elif txn.type in ['spend', 'penalty'] %}text-red-500{% else %}text-slate-600{% endif %}">
+                        {% if txn.type == 'earn' %}+{% elif txn.type in ['spend', 'penalty'] %}−{% endif %}{{ txn.amount }} 🪙
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-slate-800">{{ txn.reason }}</p>
+                        {% if txn.comment %}<p class="text-xs text-slate-400 mt-0.5">{{ txn.comment }}</p>{% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-slate-600 hidden md:table-cell">{{ txn.balance_after }} 🪙</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if txns.pages > 1 %}
+    <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+        <p class="text-sm text-slate-500">Sahifa {{ txns.page }} / {{ txns.pages }}</p>
+        <div class="flex gap-2">
+            {% if txns.has_prev %}
+            <a href="{{ url_for('transactions.transactions', page=txns.prev_num, type=txn_type) }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 hover:bg-slate-50">← Orqaga</a>
+            {% endif %}
+            {% if txns.has_next %}
+            <a href="{{ url_for('transactions.transactions', page=txns.next_num, type=txn_type) }}" class="px-4 py-2 text-sm rounded-lg border border-slate-200 hover:bg-slate-50">Oldinga →</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-16 text-slate-400">
+        <span class="text-5xl block mb-3">📭</span>
+        <p class="font-medium">Tranzaksiyalar yo'q</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

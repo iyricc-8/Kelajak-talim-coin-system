@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="flex min-h-screen">
+    <!-- Admin Sidebar -->
+    <aside class="w-56 bg-slate-900 flex flex-col fixed inset-y-0 left-0 z-30">
+        <!-- Logo -->
+        <div class="p-5 border-b border-slate-700">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg gradient-coin flex items-center justify-center text-lg">🪙</div>
+                <div>
+                    <p class="font-bold text-white text-sm">Admin panel</p>
+                    <p class="text-xs text-slate-400">Coin System</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+            {% set admin_nav = [
+                ('admin.dashboard', '📊', 'Bosh sahifa'),
+                ('admin.users', '👥', 'Foydalanuvchilar'),
+                ('admin.coins', '🪙', 'Coin'),
+                ('admin.transactions', '📋', 'Tranzaksiyalar'),
+                ('admin.store', '🛍️', "Do'kon"),
+                ('admin.orders', '📦', 'Buyurtmalar'),
+                ('admin.achievements', '🏆', 'Yutuqlar'),
+                ('admin.categories', '🗂️', 'Kategoriyalar'),
+                ('admin.reports', '📈', 'Hisobotlar'),
+                ('admin.settings', '⚙️', 'Sozlamalar'),
+            ] %}
+            {% for endpoint, icon, label in admin_nav %}
+            <a href="{{ url_for(endpoint) }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all
+                {% if request.endpoint == endpoint %}bg-brand-600 text-white{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %}">
+                <span>{{ icon }}</span><span class="font-medium">{{ label }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+
+        <!-- Switch to student view -->
+        <div class="p-3 border-t border-slate-700 space-y-2">
+            <a href="{{ url_for('student.dashboard') }}" class="flex items-center gap-2 text-xs text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition">
+                <span>🏠</span> O'quvchi ko'rinishi
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="flex items-center gap-2 text-xs text-red-400 hover:text-red-300 px-3 py-2 rounded-lg hover:bg-slate-800 transition">
+                <span>🚪</span> Chiqish
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-56">
+        <!-- Top bar -->
+        <header class="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between sticky top-0 z-20">
+            <h1 class="font-bold text-slate-800 text-lg">{% block page_title %}Administrator{% endblock %}</h1>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                    <div class="w-7 h-7 rounded-full gradient-brand flex items-center justify-center text-white text-xs font-bold">{{ current_user.first_name[0] }}</div>
+                    <span class="font-medium">{{ current_user.full_name }}</span>
+                    <span class="px-2 py-0.5 bg-brand-100 text-brand-700 rounded-full text-xs font-semibold">Administrator</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+{% endblock %}

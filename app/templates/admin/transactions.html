@@ -1,0 +1,71 @@
+{% extends "admin/layout.html" %}
+{% block page_title %}Tranzaksiyalar{% endblock %}
+{% block content %}
+<!-- Filters -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-6">
+    <form method="GET" class="flex flex-wrap gap-3">
+        <select name="user_id" class="px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-sm">
+            <option value="">Barcha foydalanuvchilar</option>
+            {% for user in all_users %}
+            <option value="{{ user.id }}" {% if selected_user == user.id %}selected{% endif %}>{{ user.full_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="type" class="px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-sm">
+            <option value="">Barcha turlar</option>
+            <option value="earn" {% if txn_type == 'earn' %}selected{% endif %}>Hisoblash</option>
+            <option value="spend" {% if txn_type == 'spend' %}selected{% endif %}>Xarid</option>
+            <option value="penalty" {% if txn_type == 'penalty' %}selected{% endif %}>Jarima</option>
+            <option value="adjustment" {% if txn_type == 'adjustment' %}selected{% endif %}>Tuzatish</option>
+        </select>
+        <button type="submit" class="px-5 py-2 gradient-brand text-white rounded-xl text-sm font-semibold hover:opacity-90">Qo'llash</button>
+        <a href="{{ url_for('admin.transactions') }}" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-200">Tozalash</a>
+    </form>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {% set type_labels = {'earn': 'Hisoblash', 'spend': 'Xarid', 'penalty': 'Jarima', 'adjustment': 'Tuzatish'} %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Foydalanuvchi</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Tur</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Miqdor</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Sabab</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Balans</th>
+                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500">Sana</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for txn in txns.items %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-3 text-sm font-medium text-slate-800">{{ txn.user.full_name }}</td>
+                    <td class="px-6 py-3">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-semibold
+                            {% if txn.type == 'earn' %}bg-emerald-100 text-emerald-700
+                            {% elif txn.type == 'spend' %}bg-red-100 text-red-700
+                            {% elif txn.type == 'penalty' %}bg-orange-100 text-orange-700
+                            {% else %}bg-slate-100 text-slate-600{% endif %}">{{ type_labels.get(txn.type, txn.type) }}</span>
+                    </td>
+                    <td class="px-6 py-3 font-bold text-sm {% if txn.type == 'earn' %}text-emerald-600{% else %}text-red-500{% endif %}">
+                        {% if txn.type == 'earn' %}+{% else %}−{% endif %}{{ txn.amount }} 🪙
+                    </td>
+                    <td class="px-6 py-3 text-sm text-slate-600 max-w-xs truncate">{{ txn.reason }}</td>
+                    <td class="px-6 py-3 text-sm text-slate-500">{{ txn.balance_after }} 🪙</td>
+                    <td class="px-6 py-3 text-xs text-slate-400">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if txns.pages > 1 %}
+    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+        <p class="text-sm text-slate-500">{{ txns.total }} tranzaksiya - Sahifa {{ txns.page }}/{{ txns.pages }}</p>
+        <div class="flex gap-2">
+            {% if txns.has_prev %}<a href="{{ url_for('admin.transactions', page=txns.prev_num, user_id=selected_user, type=txn_type) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">←</a>{% endif %}
+            {% if txns.has_next %}<a href="{{ url_for('admin.transactions', page=txns.next_num, user_id=selected_user, type=txn_type) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">→</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

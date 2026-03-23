@@ -1,0 +1,70 @@
+{% extends "student/layout.html" %}
+{% block title %}Hamyon{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">💰 Mening hamyonim</h1>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="gradient-coin rounded-2xl p-6 text-white shadow-lg">
+        <p class="text-sm font-medium opacity-80 mb-2">Joriy balans</p>
+        <p class="text-4xl font-extrabold">{{ current_user.coin_balance }}</p>
+        <p class="text-sm opacity-70 mt-1">Coin</p>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-xl mb-3">💚</div>
+        <p class="text-sm text-slate-500 mb-1">Jami ishlangan</p>
+        <p class="text-2xl font-bold text-slate-800">{{ earned }} <span class="text-sm font-normal text-slate-400">Coin</span></p>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-xl mb-3">🛍️</div>
+        <p class="text-sm text-slate-500 mb-1">Jami sarflangan</p>
+        <p class="text-2xl font-bold text-slate-800">{{ spent }} <span class="text-sm font-normal text-slate-400">Coin</span></p>
+    </div>
+</div>
+
+<!-- Transactions -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+        <h2 class="font-bold text-slate-800">Operatsiyalar tarixi</h2>
+    </div>
+    {% if txns.items %}
+    <div class="divide-y divide-slate-50">
+        {% for txn in txns.items %}
+        <div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg
+                {% if txn.type == 'earn' %}bg-emerald-100{% elif txn.type in ['spend','penalty'] %}bg-red-100{% else %}bg-slate-100{% endif %}">
+                {% if txn.type == 'earn' %}💚{% elif txn.type == 'spend' %}🛍️{% elif txn.type == 'penalty' %}⚠️{% else %}⚙️{% endif %}
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-800 truncate">{{ txn.reason }}</p>
+                {% if txn.comment %}<p class="text-xs text-slate-400 truncate">{{ txn.comment }}</p>{% endif %}
+                <p class="text-xs text-slate-400 mt-0.5">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            </div>
+            <div class="text-right">
+                <p class="font-bold {% if txn.type == 'earn' %}text-emerald-600{% elif txn.type in ['spend','penalty'] %}text-red-500{% else %}text-slate-600{% endif %}">
+                    {% if txn.type == 'earn' %}+{% elif txn.type in ['spend','penalty'] %}−{% endif %}{{ txn.amount }} 🪙
+                </p>
+                <p class="text-xs text-slate-400">→ {{ txn.balance_after }} 🪙</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if txns.pages > 1 %}
+    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+        <p class="text-sm text-slate-500">Sahifa {{ txns.page }}/{{ txns.pages }}</p>
+        <div class="flex gap-2">
+            {% if txns.has_prev %}<a href="{{ url_for('student.coins', page=txns.prev_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">←</a>{% endif %}
+            {% if txns.has_next %}<a href="{{ url_for('student.coins', page=txns.next_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">→</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="text-center py-16">
+        <span class="text-5xl block mb-3">💸</span>
+        <p class="text-slate-400">Hozircha operatsiyalar yo'q</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

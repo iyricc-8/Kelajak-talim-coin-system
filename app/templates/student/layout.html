@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-100 flex flex-col shadow-sm fixed inset-y-0 left-0 z-30 lg:relative lg:z-auto">
+        <!-- Logo -->
+        <div class="p-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl gradient-coin flex items-center justify-center shadow">
+                    <span class="text-xl">🪙</span>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800 text-sm leading-tight">Coin System</p>
+                    <p class="text-xs text-slate-400">Kelajak Talim</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coin Balance -->
+        <div class="mx-4 mt-4 p-4 rounded-2xl gradient-coin text-white shadow-lg">
+            <p class="text-xs font-medium opacity-80 mb-1">Mening balansim</p>
+            <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-bold">{{ current_user.coin_balance }}</span>
+                <span class="text-sm font-medium opacity-80">Coin</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Menyu</p>
+            {% set nav_items = [
+                ('student.dashboard', '🏠', 'Bosh sahifa'),
+                ('student.coins', '💰', 'Hamyon'),
+                ('transactions.transactions', '📋', 'Tranzaksiyalar'),
+                ('store.store', '🛍️', "Do'kon"),
+                ('student.orders', '📦', 'Buyurtmalarim'),
+                ('student.achievements', '🏆', 'Yutuqlar'),
+                ('student.leaderboard', '⭐', 'Reyting'),
+                ('student.notifications', '🔔', 'Bildirishnomalar'),
+                ('student.profile', '👤', 'Profil'),
+            ] %}
+            {% for endpoint, icon, label in nav_items %}
+            <a href="{{ url_for(endpoint) }}" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+                {% if request.endpoint == endpoint %}bg-brand-50 text-brand-600{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-800{% endif %}">
+                <span class="text-base">{{ icon }}</span>
+                <span>{{ label }}</span>
+                {% if endpoint == 'student.notifications' and current_user.unread_notifications_count > 0 %}
+                <span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ current_user.unread_notifications_count }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+
+            {% if current_user.is_teacher() %}
+            <div class="pt-4">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Boshqaruv</p>
+                <a href="{{ url_for('admin.dashboard') }}" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-800">
+                    <span class="text-base">⚙️</span><span>Admin panel</span>
+                </a>
+            </div>
+            {% endif %}
+        </nav>
+
+        <!-- User + logout -->
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center gap-3">
+                {% if current_user.avatar %}
+                <img src="{{ url_for('static', filename=current_user.avatar) }}" class="w-9 h-9 rounded-full object-cover">
+                {% else %}
+                <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white font-bold text-sm">{{ current_user.first_name[0] }}</div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-slate-800 truncate">{{ current_user.full_name }}</p>
+                    <p class="text-xs text-slate-400 capitalize">
+                        {% if current_user.role == 'student' %}O'quvchi{% elif current_user.role == 'teacher' %}O'qituvchi{% else %}Administrator{% endif %}
+                    </p>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="text-slate-400 hover:text-red-500 transition" title="Chiqish">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-20 lg:hidden hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0 lg:ml-0">
+        <!-- Mobile header -->
+        <header class="lg:hidden bg-white border-b border-slate-100 px-4 py-3 flex items-center gap-3 sticky top-0 z-20">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-slate-100">
+                <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="text-lg">🪙</span>
+                <span class="font-bold text-slate-800 text-sm">Coin System</span>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+                <span class="coin-badge text-xs font-bold px-2.5 py-1 rounded-full text-white">{{ current_user.coin_balance }} 🪙</span>
+            </div>
+        </header>
+
+        <div class="p-4 lg:p-8">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('aside');
+    const overlay = document.getElementById('sidebar-overlay');
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+}
+document.querySelector('aside').classList.add('transition-transform', 'duration-300', '-translate-x-full', 'lg:translate-x-0');
+</script>
+{% endblock %}

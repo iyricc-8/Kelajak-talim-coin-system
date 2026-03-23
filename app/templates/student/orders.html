@@ -1,0 +1,53 @@
+{% extends "student/layout.html" %}
+{% block title %}Buyurtmalarim{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">📦 Mening buyurtmalarim</h1>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    {% if orders.items %}
+    <div class="divide-y divide-slate-50">
+        {% for order in orders.items %}
+        <div class="p-5 flex flex-col md:flex-row md:items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl flex-shrink-0">
+                {% if order.product.image %}
+                <img src="{{ url_for('static', filename=order.product.image) }}" class="w-12 h-12 object-cover rounded-xl">
+                {% else %}🎁{% endif %}
+            </div>
+            <div class="flex-1">
+                <p class="font-semibold text-slate-800">{{ order.product.title }}</p>
+                <p class="text-xs text-slate-400">Buyurtma qilingan {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                {% if order.comment %}<p class="text-xs text-slate-500 mt-1">{{ order.comment }}</p>{% endif %}
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-bold text-coin-600">{{ order.price_at_purchase }} 🪙</span>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold
+                    {% if order.status == 'new' %}bg-blue-100 text-blue-700
+                    {% elif order.status == 'confirmed' %}bg-amber-100 text-amber-700
+                    {% elif order.status == 'delivered' %}bg-emerald-100 text-emerald-700
+                    {% else %}bg-red-100 text-red-700{% endif %}">
+                    {% if order.status == 'new' %}🕐 Yangi{% elif order.status == 'confirmed' %}✅ Tasdiqlangan{% elif order.status == 'delivered' %}📦 Berildi{% else %}❌ Bekor qilingan{% endif %}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if orders.pages > 1 %}
+    <div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+        <p class="text-sm text-slate-500">Sahifa {{ orders.page }}/{{ orders.pages }}</p>
+        <div class="flex gap-2">
+            {% if orders.has_prev %}<a href="{{ url_for('student.orders', page=orders.prev_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">←</a>{% endif %}
+            {% if orders.has_next %}<a href="{{ url_for('student.orders', page=orders.next_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">→</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="text-center py-16">
+        <span class="text-5xl block mb-3">📭</span>
+        <p class="text-slate-400 mb-4">Hozircha buyurtmalar yo'q</p>
+        <a href="{{ url_for('store.store') }}" class="inline-block px-6 py-2.5 gradient-brand text-white rounded-xl font-semibold hover:opacity-90 transition">Do'konga o'tish</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

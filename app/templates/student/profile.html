@@ -1,0 +1,106 @@
+{% extends "student/layout.html" %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800">👤 Mening profilim</h1>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Profile Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div class="text-center mb-6">
+            {% if current_user.avatar %}
+            <img src="{{ url_for('static', filename=current_user.avatar) }}" class="w-24 h-24 rounded-full object-cover mx-auto border-4 border-coin-300 shadow">
+            {% else %}
+            <div class="w-24 h-24 rounded-full gradient-brand flex items-center justify-center text-white text-3xl font-bold mx-auto border-4 border-brand-200 shadow">{{ current_user.first_name[0] }}</div>
+            {% endif %}
+            <h2 class="text-xl font-bold text-slate-800 mt-3">{{ current_user.full_name }}</h2>
+            <p class="text-slate-500 text-sm">@{{ current_user.username }}</p>
+            <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-xs font-semibold">
+                {% if current_user.role == 'admin' %}👑 Administrator{% elif current_user.role == 'teacher' %}👩‍🏫 O'qituvchi{% else %}🎓 O'quvchi{% endif %}
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                <span class="text-slate-400">📧</span>
+                <div>
+                    <p class="text-xs text-slate-400">Email</p>
+                    <p class="text-sm font-medium text-slate-700">{{ current_user.email }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                <span class="text-slate-400">📅</span>
+                <div>
+                    <p class="text-xs text-slate-400">Ro'yxatdan o'tgan</p>
+                    <p class="text-sm font-medium text-slate-700">{{ current_user.created_at.strftime('%d.%m.%Y') }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 gradient-coin rounded-xl text-white">
+                <span>🪙</span>
+                <div>
+                    <p class="text-xs opacity-80">Coin balansi</p>
+                    <p class="text-xl font-bold">{{ current_user.coin_balance }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h3 class="font-bold text-slate-800 mb-5">✏️ Profilni tahrirlash</h3>
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {{ form.hidden_tag() }}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Ism</label>
+                        {{ form.first_name(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-slate-50 text-slate-800") }}
+                        {% for error in form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Familiya</label>
+                        {{ form.last_name(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-slate-50 text-slate-800") }}
+                        {% for error in form.last_name.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Avatar</label>
+                    {{ form.avatar(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm") }}
+                </div>
+                <button type="submit" class="px-6 py-2.5 rounded-xl gradient-brand text-white font-semibold hover:opacity-90 transition">O'zgarishlarni saqlash</button>
+            </form>
+        </div>
+
+        <!-- Danger Zone -->
+        {% if current_user.role != 'admin' %}
+        <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-6">
+            <h3 class="font-bold text-red-700 mb-2">Xavfli zona</h3>
+            <p class="text-sm text-slate-500 mb-4">Akkauntingizni o'chirsangiz, barcha ma'lumotlar o'chadi va bu amalni ortga qaytarib bo'lmaydi.</p>
+            <form method="POST" action="{{ url_for('student.delete_profile') }}" onsubmit="return confirm('Akkauntingizni o\\'chirmoqchimisiz? Bu amalni ortga qaytarib bo\\'lmaydi.')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700">Akkauntni o'chirish</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Achievements -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h3 class="font-bold text-slate-800 mb-4">🏅 Mening yutuqlarim ({{ user_achievements|length }})</h3>
+            {% if user_achievements %}
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {% for ua in user_achievements %}
+                <div class="p-3 bg-gradient-to-br from-coin-50 to-amber-50 rounded-xl border border-coin-100">
+                    <span class="text-2xl">{{ ua.achievement.icon }}</span>
+                    <p class="text-sm font-semibold text-slate-800 mt-1">{{ ua.achievement.title }}</p>
+                    <p class="text-xs text-slate-400 mt-0.5">{{ ua.received_at.strftime('%d.%m.%Y') }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-slate-400 text-sm">Hozircha yutuqlar yo'q. Coin ishlang!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
