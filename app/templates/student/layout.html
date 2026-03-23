@@ -61,7 +61,7 @@
         </nav>
 
         <!-- User + logout -->
-        <div class="p-4 border-t border-slate-100">
+        <div class="p-4 pb-24 lg:pb-4 border-t border-slate-100">
             <div class="flex items-center gap-3">
                 {% if current_user.avatar %}
                 <img src="{{ url_for('static', filename=current_user.avatar) }}" class="w-9 h-9 rounded-full object-cover">
