@@ -47,13 +47,11 @@ def dashboard():
     unread_notifs = Notification.query.filter_by(user_id=current_user.id, is_read=False)\
         .order_by(Notification.created_at.desc()).limit(5).all()
 
-    # Leaderboard rank
+    # Leaderboard rank (XP-based)
     from sqlalchemy import func
-    from app.models import Wallet
-    ranked = db.session.query(User.id, Wallet.balance)\
-        .join(Wallet, User.id == Wallet.user_id)\
+    ranked = db.session.query(User.id, func.coalesce(User.xp, 0))\
         .filter(User.role == 'student', User.is_active == True)\
-        .order_by(Wallet.balance.desc()).all()
+        .order_by(func.coalesce(User.xp, 0).desc()).all()
     rank = next((i + 1 for i, (uid, _) in enumerate(ranked) if uid == current_user.id), None)
 
     return render_template('student/dashboard.html',
@@ -170,13 +168,11 @@ def achievements():
 @student_bp.route('/leaderboard')
 @login_required
 def leaderboard():
-    from app.models import Wallet
     from sqlalchemy import func
 
-    top_users = db.session.query(User, Wallet.balance)\
-        .join(Wallet, User.id == Wallet.user_id)\
+    top_users = db.session.query(User, func.coalesce(User.xp, 0))\
         .filter(User.role == 'student', User.is_active == True)\
-        .order_by(Wallet.balance.desc()).limit(50).all()
+        .order_by(func.coalesce(User.xp, 0).desc()).limit(50).all()
 
     return render_template('student/leaderboard.html', top_users=top_users)
 
