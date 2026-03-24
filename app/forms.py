@@ -145,8 +145,6 @@ class EconomySettingsForm(FlaskForm):
     xp_per_coin = IntegerField('1 Coin uchun XP', validators=[Optional(), NumberRange(min=0, max=1000)])
     level_2_xp = IntegerField('Level 2 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
     level_3_xp = IntegerField('Level 3 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
-    level_4_xp = IntegerField('Level 4 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
-    level_5_xp = IntegerField('Level 5 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
     level_2_min_price = IntegerField('Level 2 uchun min narx (Coin)', validators=[DataRequired(), NumberRange(min=0, max=1000000)])
     level_3_min_price = IntegerField('Level 3 uchun min narx (Coin)', validators=[DataRequired(), NumberRange(min=0, max=1000000)])
 

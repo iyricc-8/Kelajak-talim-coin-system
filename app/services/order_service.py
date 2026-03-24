@@ -60,14 +60,14 @@ def purchase_product(user, product_id):
             req_lvl = get_required_level(o.product.price_coin)
             if req_lvl == 1:
                 cheap_count += 1
-            if req_lvl >= 4:
+            if req_lvl >= 3:
                 expensive_count += 1
 
     if required_level == 1 and cheap_count >= 2:
         return False, "Siz bu oy uchun arzon (Level 1) mahsulotlar limitini (2 ta) tugatdingiz.", None
         
-    if required_level >= 4 and expensive_count >= 1:
-        return False, "Siz bu oy uchun qimmat (Level 4+) mahsulot limitini (1 ta) tugatdingiz.", None
+    if required_level >= 3 and expensive_count >= 1:
+        return False, "Siz bu oy uchun qimmat (Level 3) mahsulot limitini (1 ta) tugatdingiz.", None
 
     # Deduct coins
     txn = deduct_coins(

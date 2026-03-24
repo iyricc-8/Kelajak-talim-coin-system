@@ -535,8 +535,6 @@ def settings():
         setting.xp_per_coin = form.xp_per_coin.data
         setting.level_2_xp = form.level_2_xp.data
         setting.level_3_xp = form.level_3_xp.data
-        setting.level_4_xp = form.level_4_xp.data
-        setting.level_5_xp = form.level_5_xp.data
         setting.level_2_min_price = form.level_2_min_price.data
         setting.level_3_min_price = form.level_3_min_price.data
 

@@ -78,7 +78,12 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if user:
+        # Keep level derived from XP (max level is handled in resolve_level).
+        from app.services.economy_service import resolve_level
+        user.level = resolve_level(user.xp or 0)
+    return user
 
 
 class Wallet(db.Model):
