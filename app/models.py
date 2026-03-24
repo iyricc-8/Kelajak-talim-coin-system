@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer, BadTimeSignature, SignatureExpired
@@ -57,6 +58,23 @@ class User(UserMixin, db.Model):
 
     def is_teacher(self):
         return self.role in ('teacher', 'admin')
+
+    @property
+    def avatar_url(self):
+        """Return avatar path if it exists on disk; otherwise None."""
+        if not self.avatar:
+            return None
+        # If no app context, just return stored value
+        try:
+            static_folder = current_app.static_folder
+        except RuntimeError:
+            return self.avatar
+        if not static_folder:
+            return self.avatar
+        file_path = os.path.join(static_folder, self.avatar)
+        if not os.path.exists(file_path):
+            return None
+        return self.avatar
 
     def get_reset_token(self, expires_in=None):
         serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
