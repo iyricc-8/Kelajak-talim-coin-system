@@ -247,7 +247,10 @@ def create_product():
     if form.validate_on_submit():
         image_path = None
         if form.image.data and form.image.data.filename:
-            image_path = save_upload(form.image.data, 'products')
+            if not current_app.config.get('ENABLE_LOCAL_UPLOADS', False):
+                flash("Rasm yuklash o'chirilgan. Tashqi saqlash sozlamalarini tekshiring.", 'warning')
+            else:
+                image_path = save_upload(form.image.data, 'products')
 
         product = Product(
             title=form.title.data,
@@ -283,9 +286,12 @@ def edit_product(product_id):
         product.is_active = form.is_active.data
 
         if form.image.data and form.image.data.filename:
-            image_path = save_upload(form.image.data, 'products')
-            if image_path:
-                product.image = image_path
+            if not current_app.config.get('ENABLE_LOCAL_UPLOADS', False):
+                flash("Rasm yuklash o'chirilgan. Tashqi saqlash sozlamalarini tekshiring.", 'warning')
+            else:
+                image_path = save_upload(form.image.data, 'products')
+                if image_path:
+                    product.image = image_path
 
         db.session.commit()
         flash('Mahsulot yangilandi!', 'success')

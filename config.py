@@ -43,7 +43,7 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     INIT_DB_ON_STARTUP = False
-    ENABLE_LOCAL_UPLOADS = False
+    ENABLE_LOCAL_UPLOADS = os.environ.get('ENABLE_LOCAL_UPLOADS', '0').lower() in ('1', 'true', 'yes')
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True

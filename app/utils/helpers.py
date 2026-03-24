@@ -15,7 +15,8 @@ def save_upload(file_obj, subfolder='general'):
         return None
 
     if not current_app.config.get('ENABLE_LOCAL_UPLOADS', False):
-        raise RuntimeError('Local uploads are disabled. Configure external storage for file uploads.')
+        current_app.logger.warning('Local uploads are disabled. Skipping file upload.')
+        return None
 
     if not allowed_file(file_obj.filename):
         return None

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user, logout_user
 from app import db
 from app.models import Transaction, Order, Achievement, UserAchievement, Notification, User, Quest
@@ -91,9 +91,12 @@ def profile():
         current_user.last_name = form.last_name.data
 
         if form.avatar.data and form.avatar.data.filename:
-            avatar_path = save_upload(form.avatar.data, 'avatars')
-            if avatar_path:
-                current_user.avatar = avatar_path
+            if not current_app.config.get('ENABLE_LOCAL_UPLOADS', False):
+                flash("Rasm yuklash vaqtincha o'chirilgan. Administrator bilan bog'laning.", 'warning')
+            else:
+                avatar_path = save_upload(form.avatar.data, 'avatars')
+                if avatar_path:
+                    current_user.avatar = avatar_path
 
         db.session.commit()
         flash("Profil muvaffaqiyatli yangilandi!", 'success')
