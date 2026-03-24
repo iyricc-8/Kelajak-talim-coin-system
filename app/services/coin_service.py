@@ -1,7 +1,7 @@
 from datetime import datetime
 from app import db
 from app.models import Wallet, Transaction, Notification, Achievement, UserAchievement
-from app.services.economy_service import add_xp
+from app.services.economy_service import add_xp, get_active_event_multiplier
 
 
 def award_coins(user, amount, reason, comment=None, created_by_id=None):
@@ -9,6 +9,9 @@ def award_coins(user, amount, reason, comment=None, created_by_id=None):
     if amount <= 0:
         raise ValueError("Amount must be positive")
 
+    multiplier = get_active_event_multiplier()
+    amount = int(amount * multiplier)
+    
     wallet = user.wallet
     if not wallet:
         wallet = Wallet(user_id=user.id, balance=0)
@@ -35,14 +38,30 @@ def award_coins(user, amount, reason, comment=None, created_by_id=None):
         message=f'Sizga {amount} Coin hisoblandi. Sabab: {reason}'
     )
     db.session.add(notif)
-
-    add_xp(user, amount)
     db.session.commit()
 
     # Check achievements after awarding
     check_and_award_achievements(user)
 
     return txn
+
+def award_xp(user, amount, reason=None):
+    """Award XP separately. Does not affect coins."""
+    if amount <= 0:
+        return 0
+    gained = add_xp(user, amount)
+    
+    if reason:
+        notif = Notification(
+            user_id=user.id,
+            title='+XP Tajriba Olishi!',
+            message=f'Sizga {amount} XP berildi. Sabab: {reason}'
+        )
+        db.session.add(notif)
+        
+    db.session.commit()
+    check_and_award_achievements(user)
+    return gained
 
 
 def deduct_coins(user, amount, reason, comment=None, created_by_id=None, txn_type='spend'):
@@ -114,9 +133,6 @@ def adjust_coins(user, amount, reason, comment=None, created_by_id=None):
         message=f'{msg} Sabab: {reason}'
     )
     db.session.add(notif)
-
-    if amount > 0:
-        add_xp(user, amount)
     db.session.commit()
 
     return txn

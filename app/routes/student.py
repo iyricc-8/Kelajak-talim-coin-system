@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user, logout_user
 from app import db
-from app.models import Transaction, Order, Achievement, UserAchievement, Notification, User
+from app.models import Transaction, Order, Achievement, UserAchievement, Notification, User, Quest
 from app.forms import EditProfileForm
 from app.services.user_service import delete_user_account
+from app.services.quest_service import process_daily_activity, get_user_quests
+from app.services.economy_service import get_next_level_xp
 from app.utils.helpers import save_upload
 import os
 
@@ -13,6 +15,21 @@ student_bp = Blueprint('student', __name__)
 @student_bp.route('/dashboard')
 @login_required
 def dashboard():
+    # Process daily streak
+    streak_updated, bonus_coins = process_daily_activity(current_user)
+    if streak_updated and bonus_coins:
+        flash(f'Tabriklaymiz! {current_user.streak} kunlik streak uchun sizga {bonus_coins} Coin berildi!', 'success')
+    elif streak_updated:
+        pass # Just updated without bonus
+        
+    # Get active quests
+    user_quests = get_user_quests(current_user)
+
+    current_xp = current_user.xp or 0
+    next_level_xp = get_next_level_xp(current_user.level or 1)
+    progress_pct = 100 if not next_level_xp else int(min(100, (current_xp / next_level_xp) * 100))
+    remaining_xp = None if not next_level_xp else max(0, next_level_xp - current_xp)
+
     from app.models import Product
     # Recent transactions
     recent_txns = Transaction.query.filter_by(user_id=current_user.id)\
@@ -45,7 +62,24 @@ def dashboard():
                            popular_products=popular_products,
                            user_achievements=user_achievements,
                            unread_notifs=unread_notifs,
+                           user_quests=user_quests,
+                           current_xp=current_xp,
+                           progress_pct=progress_pct,
+                           next_level_xp=next_level_xp,
+                           remaining_xp=remaining_xp,
                            rank=rank)
+
+
+@student_bp.route('/quest/<int:quest_id>/complete', methods=['POST'])
+@login_required
+def complete_user_quest(quest_id):
+    from app.services.quest_service import complete_quest
+    success, msg = complete_quest(current_user, quest_id)
+    if success:
+        flash(msg, 'success')
+    else:
+        flash(msg, 'danger')
+    return redirect(url_for('student.dashboard'))
 
 
 @student_bp.route('/profile', methods=['GET', 'POST'])

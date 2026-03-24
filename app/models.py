@@ -20,6 +20,8 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, default=True)
     xp = db.Column(db.Integer, default=0)
     level = db.Column(db.Integer, default=1)
+    streak = db.Column(db.Integer, default=0)
+    last_active_date = db.Column(db.Date, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -27,6 +29,7 @@ class User(UserMixin, db.Model):
     transactions = db.relationship('Transaction', foreign_keys='Transaction.user_id', backref='user', lazy='dynamic')
     orders = db.relationship('Order', backref='user', lazy='dynamic')
     achievements = db.relationship('UserAchievement', backref='user', lazy='dynamic')
+    quests = db.relationship('UserQuest', backref='user', lazy='dynamic')
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
 
     def set_password(self, password):
@@ -199,13 +202,62 @@ class Notification(db.Model):
         return f'<Notification user={self.user_id} read={self.is_read}>'
 
 
+class Quest(db.Model):
+    __tablename__ = 'quests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    reward_coins = db.Column(db.Integer, default=0)
+    reward_xp = db.Column(db.Integer, default=0)
+    quest_type = db.Column(db.String(20), default='daily')  # daily, weekly
+    is_active = db.Column(db.Boolean, default=True)
+
+    user_quests = db.relationship('UserQuest', backref='quest', lazy='dynamic')
+
+    def __repr__(self):
+        return f'<Quest {self.title}>'
+
+
+class UserQuest(db.Model):
+    __tablename__ = 'user_quests'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    quest_id = db.Column(db.Integer, db.ForeignKey('quests.id'), nullable=False)
+    is_completed = db.Column(db.Boolean, default=False)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    expires_at = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return f'<UserQuest user={self.user_id} quest={self.quest_id}>'
+
+
+class Event(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    multiplier = db.Column(db.Float, default=1.0)  # e.g., 2.0 for x2 coins
+    start_date = db.Column(db.DateTime, nullable=True)
+    end_date = db.Column(db.DateTime, nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+
+    def __repr__(self):
+        return f'<Event {self.title}>'
+
+
+
 class EconomySetting(db.Model):
     __tablename__ = 'economy_settings'
 
     id = db.Column(db.Integer, primary_key=True)
     xp_per_coin = db.Column(db.Integer, default=3)
-    level_2_xp = db.Column(db.Integer, default=200)
-    level_3_xp = db.Column(db.Integer, default=250)
+    level_2_xp = db.Column(db.Integer, default=300)
+    level_3_xp = db.Column(db.Integer, default=800)
+    level_4_xp = db.Column(db.Integer, default=1500)
+    level_5_xp = db.Column(db.Integer, default=2500)
     level_2_min_price = db.Column(db.Integer, default=100)
     level_3_min_price = db.Column(db.Integer, default=250)
     store_open_days = db.Column(db.String(32), default='2,5')  # 0=Mon ... 6=Sun

@@ -7,14 +7,53 @@
 </div>
 
 {% if not store_open %}
-<div class="mb-6 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-700 text-sm">
-    Do'kon faqat <span class="font-semibold">Chorshanba</span> va <span class="font-semibold">Shanba</span> kunlari ochiq.
+<div class="mb-6 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-700 text-sm flex items-start gap-3">
+    <span class="text-xl">🏪</span>
+    <div>
+        <p class="font-bold">Do'kon yopiq</p>
+        <p>Do'kon faqat <span class="font-semibold">Chorshanba</span> va <span class="font-semibold">Shanba</span> kunlari ochiladi. Boshqa kunlari tanga yig'ing!</p>
+    </div>
 </div>
 {% else %}
-<div class="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm">
-    Do'kon hozir ochiq. Xarid qilishingiz mumkin.
+<div class="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm flex items-start gap-3">
+    <span class="text-xl">✅</span>
+    <div>
+        <p class="font-bold">Do'kon ochiq</p>
+        <p>O'zingizga yoqqan mahsulotni xarid qilishingiz mumkin.</p>
+    </div>
 </div>
 {% endif %}
+
+<!-- Events Banner -->
+{% if active_events %}
+<div class="mb-6 space-y-3">
+    {% for ev in active_events %}
+    <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-lg relative overflow-hidden flex items-center gap-4">
+        <div class="absolute -right-4 -top-4 text-6xl opacity-20">🔥</div>
+        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-bold border border-white/30 backdrop-blur-sm shrink-0">
+            x{{ ev.multiplier }}
+        </div>
+        <div class="relative z-10">
+            <h3 class="font-bold text-lg leading-tight">{{ ev.title }}</h3>
+            <p class="text-brand-100 text-sm mt-0.5">{{ ev.description or 'Maxsus tadbir faol!' }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Limits Banner -->
+<div class="mb-6 p-4 rounded-2xl border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-start gap-3">
+    <span class="text-xl mt-0.5">ℹ️</span>
+    <div>
+        <p class="font-bold mb-1">Xarid limitlari:</p>
+        <ul class="list-disc pl-4 space-y-0.5 opacity-90">
+            <li><span class="font-medium">Haftada 1 marta</span> xarid qilishingiz mumkin.</li>
+            <li>Level 1 mahsulotlar: oyiga ko'pi bilan <span class="font-medium">2 ta</span>.</li>
+            <li>Level 4+ mahsulotlar: oyiga ko'pi bilan <span class="font-medium">1 ta</span>.</li>
+        </ul>
+    </div>
+</div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white rounded-2xl border border-slate-100 p-4">

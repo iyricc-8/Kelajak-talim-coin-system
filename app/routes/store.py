@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app.models import Product, Category
+from app.models import Product, Category, Event
 from app.services.order_service import purchase_product
 from app.services.economy_service import is_store_open, get_required_level, get_next_level_xp
+from datetime import date
 
 store_bp = Blueprint('store', __name__)
 
@@ -40,6 +41,13 @@ def store():
     progress_pct = 100 if not next_level_xp else int(min(100, (current_xp / next_level_xp) * 100))
     remaining_xp = None if not next_level_xp else max(0, next_level_xp - current_xp)
 
+    today = date.today()
+    active_events = Event.query.filter(
+        Event.is_active == True,
+        (Event.start_date == None) | (Event.start_date <= today),
+        (Event.end_date == None) | (Event.end_date >= today)
+    ).all()
+
     return render_template('store/store.html',
                            products=products,
                            categories=categories,
@@ -51,7 +59,8 @@ def store():
                            next_level_xp=next_level_xp,
                            current_xp=current_xp,
                            progress_pct=progress_pct,
-                           remaining_xp=remaining_xp)
+                           remaining_xp=remaining_xp,
+                           active_events=active_events)
 
 
 @store_bp.route('/store/<int:product_id>')

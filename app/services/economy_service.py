@@ -8,8 +8,10 @@ def _get_settings():
     if not settings:
         return {
             'xp_per_coin': current_app.config.get('XP_PER_COIN', 3),
-            'level_2_xp': current_app.config.get('LEVEL_2_XP', 200),
-            'level_3_xp': current_app.config.get('LEVEL_3_XP', 250),
+            'level_2_xp': current_app.config.get('LEVEL_2_XP', 300),
+            'level_3_xp': current_app.config.get('LEVEL_3_XP', 800),
+            'level_4_xp': current_app.config.get('LEVEL_4_XP', 1500),
+            'level_5_xp': current_app.config.get('LEVEL_5_XP', 2500),
             'level_2_min_price': current_app.config.get('LEVEL_2_MIN_PRICE', 100),
             'level_3_min_price': current_app.config.get('LEVEL_3_MIN_PRICE', 250),
             'store_open_days': current_app.config.get('STORE_OPEN_DAYS', (2, 5)),
@@ -28,6 +30,8 @@ def _get_settings():
         'xp_per_coin': settings.xp_per_coin,
         'level_2_xp': settings.level_2_xp,
         'level_3_xp': settings.level_3_xp,
+        'level_4_xp': getattr(settings, 'level_4_xp', 1500),
+        'level_5_xp': getattr(settings, 'level_5_xp', 2500),
         'level_2_min_price': settings.level_2_min_price,
         'level_3_min_price': settings.level_3_min_price,
         'store_open_days': days,
@@ -36,31 +40,36 @@ def _get_settings():
 
 def get_level_thresholds():
     settings = _get_settings()
-    return settings['level_2_xp'], settings['level_3_xp']
+    return (
+        settings.get('level_2_xp', 300),
+        settings.get('level_3_xp', 800),
+        settings.get('level_4_xp', 1500),
+        settings.get('level_5_xp', 2500)
+    )
 
 
 def resolve_level(xp):
-    level_2, level_3 = get_level_thresholds()
+    l2, l3, l4, l5 = get_level_thresholds()
     level = 1
-    if level_2 is not None and xp >= level_2:
-        level = 2
-    if level_3 is not None and xp >= level_3:
-        level = 3
+    if xp >= l2: level = 2
+    if xp >= l3: level = 3
+    if xp >= l4: level = 4
+    if xp >= l5: level = 5
     return level
 
 
 def get_next_level_xp(level):
-    level_2, level_3 = get_level_thresholds()
-    if level < 2:
-        return level_2
-    if level == 2:
-        return level_3
+    l2, l3, l4, l5 = get_level_thresholds()
+    if level < 2: return l2
+    if level == 2: return l3
+    if level == 3: return l4
+    if level == 4: return l5
     return None
 
 
-def add_xp(user, coin_amount):
-    xp_per_coin = _get_settings()['xp_per_coin']
-    gained = max(0, coin_amount) * xp_per_coin
+def add_xp(user, amount):
+    """Directly add XP to user, separate from coins."""
+    gained = max(0, amount)
     user.xp = (user.xp or 0) + gained
     user.level = resolve_level(user.xp)
     return gained
@@ -68,13 +77,33 @@ def add_xp(user, coin_amount):
 
 def get_required_level(price_coin):
     settings = _get_settings()
-    level_2_min = settings['level_2_min_price']
-    level_3_min = settings['level_3_min_price']
-    if price_coin >= level_3_min:
-        return 3
-    if price_coin >= level_2_min:
+    # Simple logic for determining what level is required based on price
+    # Based on user request: cheap < 200 (lvl 1), medium 200-700 (lvl 2-3), expensive 700+ (lvl 4+)
+    if price_coin >= 700:
+        return 4
+    if price_coin >= 200:
         return 2
     return 1
+
+
+def get_active_event_multiplier():
+    """Check if there's an active x2 event, etc."""
+    from app.models import Event
+    active_events = Event.query.filter_by(is_active=True).all()
+    # Find max multiplier
+    multiplier = 1.0
+    now = datetime.utcnow()
+    for e in active_events:
+        valid = True
+        if e.start_date and now < e.start_date:
+            valid = False
+        if e.end_date and now > e.end_date:
+            valid = False
+            
+        if valid and e.multiplier > multiplier:
+            multiplier = e.multiplier
+            
+    return multiplier
 
 
 def is_store_open(now=None):

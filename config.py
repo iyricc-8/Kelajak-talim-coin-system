@@ -36,7 +36,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    INIT_DB_ON_STARTUP = True
+    INIT_DB_ON_STARTUP = False
     ENABLE_LOCAL_UPLOADS = True
 
 

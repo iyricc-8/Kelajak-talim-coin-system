@@ -1,0 +1,77 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Eventlar (Tadbirlar){% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800">Maxsus Eventlar</h2>
+        <p class="text-sm text-slate-500 mt-1">X2 Coin yoki maxsus kunlarni boshqarish</p>
+    </div>
+    <a href="{{ url_for('admin.create_event') }}" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Yangi Event
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm whitespace-nowrap">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-semibold border-b border-slate-200">
+                <tr>
+                    <th class="px-6 py-4">Sarlavha</th>
+                    <th class="px-6 py-4">Multiplier</th>
+                    <th class="px-6 py-4">Muddat</th>
+                    <th class="px-6 py-4">Holati</th>
+                    <th class="px-6 py-4 text-right">Amallar</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for e in events %}
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="px-6 py-4">
+                        <p class="font-medium text-slate-800">{{ e.title }}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-amber-500 font-bold bg-amber-50 px-2 py-1 rounded-full text-xs border border-amber-200">
+                            x{{ e.multiplier }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-slate-500 text-xs">
+                        {% if e.start_date %}{{ e.start_date.strftime('%Y-%m-%d') }}{% else %}Boshi yo'q{% endif %} - 
+                        {% if e.end_date %}{{ e.end_date.strftime('%Y-%m-%d') }}{% else %}Oxiri yo'q{% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if e.is_active %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Faol
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Faol emas
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <form action="{{ url_for('admin.toggle_event', id=e.id) }}" method="POST" class="inline">
+                            <button class="text-slate-400 hover:text-slate-600" title="Faollikni o'zgartirish">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </form>
+                        <a href="{{ url_for('admin.edit_event', id=e.id) }}" class="text-brand-600 hover:text-brand-800 inline-block">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-6 py-8 text-center text-slate-500">
+                        Eventlar yo'q. Yangi event qo'shing.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

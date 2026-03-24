@@ -2,9 +2,42 @@
 {% block title %}Bosh sahifa{% endblock %}
 {% block content %}
 <!-- Header -->
-<div class="mb-8">
+<div class="mb-6">
     <h1 class="text-2xl font-bold text-slate-800">Xush kelibsiz, {{ current_user.first_name }}! 👋</h1>
     <p class="text-slate-500 text-sm mt-1">Bugungi progressingiz</p>
+</div>
+
+<!-- XP Progress Bar -->
+<div class="mb-8 bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center justify-between gap-4 lg:gap-6">
+    <div class="flex-shrink-0 text-center">
+        <div class="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-brand-100 flex items-center justify-center border-4 border-brand-50 text-brand-600 font-bold text-lg lg:text-xl mx-auto shadow-inner">
+            Lvl {{ current_user.level or 1 }}
+        </div>
+    </div>
+    <div class="flex-1">
+        <div class="flex justify-between items-end mb-2">
+            <div>
+                <span class="text-slate-800 font-bold text-base lg:text-lg">{{ current_xp }} XP</span>
+                <span class="text-slate-500 text-xs lg:text-sm"> / {% if next_level_xp %}{{ next_level_xp }} XP{% else %}Max{% endif %}</span>
+            </div>
+            {% if remaining_xp %}
+            <span class="text-xs lg:text-sm font-medium text-brand-600 hidden sm:block">Keyingi darajagacha {{ remaining_xp }} XP</span>
+            {% else %}
+            <span class="text-xs lg:text-sm font-medium text-amber-500 hidden sm:block">Maksimum daraja!</span>
+            {% endif %}
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2 lg:h-3">
+            <div class="bg-gradient-to-r from-brand-400 to-brand-600 h-2 lg:h-3 rounded-full transition-all duration-1000" style="width: {{ progress_pct }}%"></div>
+        </div>
+        {% if remaining_xp %}
+        <div class="mt-1 sm:hidden text-right"><span class="text-xs font-medium text-brand-600">{{ remaining_xp }} XP qoldi</span></div>
+        {% endif %}
+    </div>
+    <div class="flex-shrink-0 text-center hidden sm:block">
+        <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-slate-50 flex items-center justify-center border-2 border-slate-100 text-slate-400 font-bold mx-auto text-sm">
+            {% if next_level_xp %}Lvl {{ (current_user.level or 1) + 1 }}{% else %}👑{% endif %}
+        </div>
+    </div>
 </div>
 
 <!-- Stats Row -->
@@ -19,14 +52,15 @@
         <p class="text-xs font-medium opacity-70 mt-1">Coin</p>
     </div>
 
-    <!-- Rank -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">⭐</span>
-            <p class="text-sm font-medium text-slate-500">O'rin</p>
+    <!-- Streak -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
+        <div class="absolute -right-4 -top-4 text-6xl opacity-10">🔥</div>
+        <div class="flex items-center gap-2 mb-3 relative">
+            <span class="text-2xl">🔥</span>
+            <p class="text-sm font-medium text-slate-500">Streak</p>
         </div>
-        <p class="text-3xl font-extrabold text-slate-800">{{ rank or '—' }}</p>
-        <p class="text-xs text-slate-400 mt-1">reytingda</p>
+        <p class="text-3xl font-extrabold text-slate-800">{{ current_user.streak or 0 }}</p>
+        <p class="text-xs text-slate-400 mt-1">kun ketma-ket</p>
     </div>
 
     <!-- Achievements -->
@@ -87,6 +121,45 @@
 
     <!-- Right Column -->
     <div class="space-y-6">
+        <!-- Quests -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-bold text-slate-800">🎯 Kvestlar</h2>
+            </div>
+            {% if user_quests %}
+            <div class="space-y-3">
+                {% for item in user_quests %}
+                {% set q = item.quest %}
+                {% set status = item.status %}
+                <div class="p-3 rounded-xl border {% if status == 'completed' %}bg-emerald-50 border-emerald-100{% else %}bg-slate-50 border-slate-100{% endif %}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="font-medium text-slate-800 text-sm">{{ q.title }}</p>
+                            <p class="text-xs text-slate-500 mt-0.5">{{ q.description }}</p>
+                        </div>
+                        {% if status == 'completed' %}
+                        <span class="text-emerald-500 text-xl pl-2">✅</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex gap-1.5 flex-wrap">
+                            {% if q.reward_coins > 0 %}<span class="text-amber-600 bg-amber-100 px-2 py-0.5 rounded-md text-xs font-bold">+{{ q.reward_coins }} 🪙</span>{% endif %}
+                            {% if q.reward_xp > 0 %}<span class="text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-md text-xs font-bold">+{{ q.reward_xp }} ⭐</span>{% endif %}
+                        </div>
+                        {% if status == 'active' %}
+                        <form action="{{ url_for('student.complete_user_quest', quest_id=q.id) }}" method="POST">
+                            <button type="submit" class="text-xs bg-brand-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-brand-700 transition shadow-sm whitespace-nowrap">Bajarish</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-slate-400 text-sm text-center py-4 bg-slate-50 rounded-xl border border-slate-100 border-dashed">Hozircha kvestlar yo'q</p>
+            {% endif %}
+        </div>
+
         <!-- Achievements -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
             <div class="flex items-center justify-between mb-4">
