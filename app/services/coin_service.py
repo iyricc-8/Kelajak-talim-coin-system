@@ -1,16 +1,12 @@
-from datetime import datetime
 from app import db
 from app.models import Wallet, Transaction, Notification, Achievement, UserAchievement
-from app.services.economy_service import add_xp, get_active_event_multiplier
+from app.services.economy_service import add_xp, get_xp_per_coin
 
 
 def award_coins(user, amount, reason, comment=None, created_by_id=None):
     """Award coins to a user. Creates transaction, updates wallet, checks achievements."""
     if amount <= 0:
         raise ValueError("Amount must be positive")
-
-    multiplier = get_active_event_multiplier()
-    amount = int(amount * multiplier)
     
     wallet = user.wallet
     if not wallet:
@@ -38,6 +34,11 @@ def award_coins(user, amount, reason, comment=None, created_by_id=None):
         message=f'Sizga {amount} Coin hisoblandi. Sabab: {reason}'
     )
     db.session.add(notif)
+
+    xp_per_coin = get_xp_per_coin()
+    if xp_per_coin > 0:
+        add_xp(user, amount * xp_per_coin)
+
     db.session.commit()
 
     # Check achievements after awarding

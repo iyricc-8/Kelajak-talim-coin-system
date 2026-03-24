@@ -75,6 +75,16 @@ def add_xp(user, amount):
     return gained
 
 
+def get_xp_per_coin():
+    settings = _get_settings()
+    value = settings.get('xp_per_coin', 0)
+    try:
+        value = int(value)
+    except (TypeError, ValueError):
+        value = 0
+    return max(0, value)
+
+
 def get_required_level(price_coin):
     settings = _get_settings()
     # Simple logic for determining what level is required based on price
@@ -84,26 +94,6 @@ def get_required_level(price_coin):
     if price_coin >= 200:
         return 2
     return 1
-
-
-def get_active_event_multiplier():
-    """Check if there's an active x2 event, etc."""
-    from app.models import Event
-    active_events = Event.query.filter_by(is_active=True).all()
-    # Find max multiplier
-    multiplier = 1.0
-    now = datetime.utcnow()
-    for e in active_events:
-        valid = True
-        if e.start_date and now < e.start_date:
-            valid = False
-        if e.end_date and now > e.end_date:
-            valid = False
-            
-        if valid and e.multiplier > multiplier:
-            multiplier = e.multiplier
-            
-    return multiplier
 
 
 def is_store_open(now=None):

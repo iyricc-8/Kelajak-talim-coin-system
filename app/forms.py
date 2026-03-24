@@ -64,30 +64,12 @@ class DeductCoinsForm(FlaskForm):
     submit = SubmitField('Hisobdan yechish')
 
 
-class AwardXPForm(FlaskForm):
-    user_id = SelectField("O'quvchi", coerce=int, validators=[DataRequired()])
-    amount = IntegerField('XP miqdori', validators=[DataRequired(), NumberRange(min=1, max=10000)])
-    reason = StringField('Sabab', validators=[DataRequired(), Length(max=256)])
-    submit = SubmitField('Hisoblash')
-
-
 class QuestForm(FlaskForm):
     title = StringField('Kvest Nomi', validators=[DataRequired(), Length(max=256)])
     description = TextAreaField('Tavsif', validators=[Optional()])
     reward_coins = IntegerField('Mukofot (Coin)', validators=[Optional(), NumberRange(min=0)])
     reward_xp = IntegerField('Mukofot (XP)', validators=[Optional(), NumberRange(min=0)])
     quest_type = SelectField('Kvest Turi', choices=[('daily', 'Kunlik (Daily)'), ('weekly', 'Haftalik (Weekly)')])
-    is_active = BooleanField('Faol', default=True)
-    submit = SubmitField('Saqlash')
-
-
-class EventForm(FlaskForm):
-    from wtforms.fields import DateField
-    title = StringField('Event Nomi', validators=[DataRequired(), Length(max=256)])
-    description = TextAreaField('Tavsif', validators=[Optional()])
-    multiplier = StringField('Ko-paytiruvchi (Masalan x2 uchun 2.0)', default='1.0')
-    start_date = DateField('Boshlanish sanasi', format='%Y-%m-%d', validators=[Optional()])
-    end_date = DateField('Tugash sanasi', format='%Y-%m-%d', validators=[Optional()])
     is_active = BooleanField('Faol', default=True)
     submit = SubmitField('Saqlash')
 
@@ -160,7 +142,7 @@ class EditUserForm(FlaskForm):
 
 
 class EconomySettingsForm(FlaskForm):
-    xp_per_coin = IntegerField('1 Coin uchun XP (Eski tizim)', validators=[Optional(), NumberRange(min=0, max=1000)])
+    xp_per_coin = IntegerField('1 Coin uchun XP', validators=[Optional(), NumberRange(min=0, max=1000)])
     level_2_xp = IntegerField('Level 2 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
     level_3_xp = IntegerField('Level 3 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])
     level_4_xp = IntegerField('Level 4 XP', validators=[DataRequired(), NumberRange(min=0, max=100000)])

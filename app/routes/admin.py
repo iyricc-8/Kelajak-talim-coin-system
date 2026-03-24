@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting, Quest, Event
-from app.forms import AwardCoinsForm, DeductCoinsForm, ProductForm, CategoryForm, AchievementForm, EditUserForm, EconomySettingsForm, AwardXPForm, QuestForm, EventForm
-from app.services.coin_service import award_coins, deduct_coins, adjust_coins, award_xp
+from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting, Quest
+from app.forms import AwardCoinsForm, DeductCoinsForm, ProductForm, CategoryForm, AchievementForm, EditUserForm, EconomySettingsForm, QuestForm
+from app.services.coin_service import award_coins, deduct_coins
 from app.services.order_service import update_order_status
 from app.services.user_service import delete_user_account
 from app.utils.helpers import save_upload, role_required
@@ -165,24 +165,6 @@ def coins():
             return redirect(url_for('admin.coins'))
 
     return render_template('admin/coins.html', award_form=award_form, deduct_form=deduct_form)
-
-
-@admin_bp.route('/award_xp', methods=['GET', 'POST'])
-@admin_required
-def award_xp_route():
-    students = User.query.filter(User.role.in_(['student', 'teacher'])).order_by(User.first_name).all()
-    form = AwardXPForm()
-    form.user_id.choices = [(u.id, f'{u.full_name} (@{u.username})') for u in students]
-
-    if form.validate_on_submit():
-        target = User.query.get(form.user_id.data)
-        if target:
-            award_xp(target, form.amount.data, form.reason.data)
-            flash(f"{target.full_name} foydalanuvchisiga {form.amount.data} XP hisoblandi.", 'success')
-        return redirect(url_for('admin.award_xp_route'))
-        
-    # We can render the same coins.html but customized, or create award_xp.html
-    return render_template('admin/award_xp.html', form=form)
 
 
 # -- Transactions ------------------------------------------
@@ -629,55 +611,3 @@ def toggle_quest(id):
     db.session.commit()
     flash(f'Kvest yangilandi.', 'info')
     return redirect(url_for('admin.quests'))
-
-# -- Events ------------------------------------------------
-@admin_bp.route('/events')
-@admin_required
-def events():
-    events_list = Event.query.all()
-    return render_template('admin/events.html', events=events_list)
-
-@admin_bp.route('/events/create', methods=['GET', 'POST'])
-@strict_admin
-def create_event():
-    form = EventForm()
-    if form.validate_on_submit():
-        e = Event(
-            title=form.title.data,
-            description=form.description.data,
-            multiplier=float(form.multiplier.data or 1.0),
-            start_date=form.start_date.data,
-            end_date=form.end_date.data,
-            is_active=form.is_active.data
-        )
-        db.session.add(e)
-        db.session.commit()
-        flash('Event yaratildi!', 'success')
-        return redirect(url_for('admin.events'))
-    return render_template('admin/event_form.html', form=form, title='Yangi Event')
-
-@admin_bp.route('/events/<int:id>/edit', methods=['GET', 'POST'])
-@strict_admin
-def edit_event(id):
-    e = Event.query.get_or_404(id)
-    form = EventForm(obj=e)
-    if form.validate_on_submit():
-        e.title = form.title.data
-        e.description = form.description.data
-        e.multiplier = float(form.multiplier.data or 1.0)
-        e.start_date = form.start_date.data
-        e.end_date = form.end_date.data
-        e.is_active = form.is_active.data
-        db.session.commit()
-        flash('Event yangilandi!', 'success')
-        return redirect(url_for('admin.events'))
-    return render_template('admin/event_form.html', form=form, title="Eventni tahrirlash", event=e)
-
-@admin_bp.route('/events/<int:id>/toggle', methods=['POST'])
-@strict_admin
-def toggle_event(id):
-    e = Event.query.get_or_404(id)
-    e.is_active = not e.is_active
-    db.session.commit()
-    flash(f'Event yangilandi.', 'info')
-    return redirect(url_for('admin.events'))

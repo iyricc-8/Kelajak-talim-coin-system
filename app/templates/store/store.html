@@ -24,23 +24,6 @@
 </div>
 {% endif %}
 
-<!-- Events Banner -->
-{% if active_events %}
-<div class="mb-6 space-y-3">
-    {% for ev in active_events %}
-    <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-lg relative overflow-hidden flex items-center gap-4">
-        <div class="absolute -right-4 -top-4 text-6xl opacity-20">🔥</div>
-        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl font-bold border border-white/30 backdrop-blur-sm shrink-0">
-            x{{ ev.multiplier }}
-        </div>
-        <div class="relative z-10">
-            <h3 class="font-bold text-lg leading-tight">{{ ev.title }}</h3>
-            <p class="text-brand-100 text-sm mt-0.5">{{ ev.description or 'Maxsus tadbir faol!' }}</p>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
 
 <!-- Limits Banner -->
 <div class="mb-6 p-4 rounded-2xl border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-start gap-3">
