@@ -1,95 +1,217 @@
 {% extends "student/layout.html" %}
 {% block title %}{{ product.title }}{% endblock %}
 {% block content %}
-<div class="mb-4">
-    <a href="{{ url_for('store.store') }}" class="text-brand-600 text-sm hover:underline">? Do'konga qaytish</a>
-</div>
+{% set current_level = current_user.level or 1 %}
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <!-- Image -->
-    <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-        {% if product.image %}
-        <img src="{{ url_for('static', filename=product.image) }}" class="w-full h-72 object-cover" alt="{{ product.title }}">
-        {% else %}
-        <div class="w-full h-72 bg-gradient-to-br from-brand-50 to-coin-50 flex items-center justify-center text-7xl">??</div>
-        {% endif %}
+<div class="max-w-6xl mx-auto space-y-6">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-500">
+        <a href="{{ url_for('store.store') }}" class="inline-flex items-center gap-2 text-brand-600 hover:underline">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+            </svg>
+            Do'konga qaytish
+        </a>
+        <span>/</span>
+        <span class="truncate">{{ product.title }}</span>
     </div>
 
-    <!-- Info -->
-    <div class="space-y-4">
-        {% if product.category %}
-        <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-3 py-1 rounded-full">{{ product.category.name }}</span>
-        {% endif %}
-        <h1 class="text-2xl font-bold text-slate-800">{{ product.title }}</h1>
-        {% if product.description %}
-        <p class="text-slate-600 leading-relaxed">{{ product.description }}</p>
-        {% endif %}
-
-        {% if not store_open %}
-        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700">
-            Do'kon faqat <span class="font-semibold">Chorshanba</span> va <span class="font-semibold">Shanba</span> kunlari ochiq.
-        </div>
-        {% endif %}
-
-        {% if not has_level %}
-        <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
-            Bu mahsulot uchun <span class="font-semibold">Level {{ required_level }}</span> kerak. Sizning darajangiz: {{ current_user.level or 1 }}.
-        </div>
-        {% endif %}
-
-        <!-- Price -->
-        <div class="p-4 bg-coin-50 rounded-2xl border border-coin-200 flex items-center gap-3">
-            <span class="text-3xl">??</span>
-            <div>
-                <p class="text-3xl font-extrabold text-coin-700">{{ product.price_coin }}</p>
-                <p class="text-xs text-coin-600">Coin</p>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <!-- Media + Details -->
+        <div class="lg:col-span-3 space-y-4">
+            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+                <div class="relative">
+                    {% if product.image %}
+                    <img src="{{ url_for('static', filename=product.image) }}" class="w-full h-72 md:h-[420px] object-cover" alt="{{ product.title }}">
+                    {% else %}
+                    <div class="w-full h-72 md:h-[420px] bg-gradient-to-br from-brand-50 to-coin-50 flex items-center justify-center text-slate-500">
+                        <div class="text-center">
+                            <div class="text-xs uppercase tracking-widest">Rasm yo'q</div>
+                            <div class="text-sm text-slate-400">Mahsulot rasmi yuklanmagan</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="absolute top-4 left-4 flex flex-wrap gap-2">
+                        {% if product.category %}
+                        <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-3 py-1 rounded-full">{{ product.category.name }}</span>
+                        {% endif %}
+                        <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">Level {{ required_level }}</span>
+                        {% if product.stock == 0 %}
+                        <span class="text-xs font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full">Mavjud emas</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">{{ product.title }}</h1>
+                    {% if product.description %}
+                    <p class="mt-3 text-slate-600 leading-relaxed">{{ product.description }}</p>
+                    {% else %}
+                    <p class="mt-3 text-slate-500 text-sm italic">Tavsif kiritilmagan.</p>
+                    {% endif %}
+                </div>
             </div>
-            <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Level {{ required_level }}</span>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Stock -->
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l9-4 9 4-9 4-9-4z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10l9 4 9-4V7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Ombor</p>
+                            {% if product.stock > 10 %}
+                            <p class="text-sm font-semibold text-emerald-500">Mavjud</p>
+                            <p class="text-xs text-slate-500">Yetarli miqdor bor</p>
+                            {% elif product.stock > 0 %}
+                            <p class="text-sm font-semibold text-amber-500">Qoldi: {{ product.stock }} ta</p>
+                            <p class="text-xs text-slate-500">Cheklangan miqdor</p>
+                            {% else %}
+                            <p class="text-sm font-semibold text-red-500">Mavjud emas</p>
+                            <p class="text-xs text-slate-500">Keyinroq qayta tekshiring</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Store Status -->
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
+                                <circle cx="12" cy="12" r="9"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Do'kon holati</p>
+                            {% if store_open %}
+                            <p class="text-sm font-semibold text-emerald-500">Ochiq</p>
+                            <p class="text-xs text-slate-500">Bugun xarid qilish mumkin</p>
+                            {% else %}
+                            <p class="text-sm font-semibold text-amber-500">Yopiq</p>
+                            <p class="text-xs text-slate-500">Chorshanba va Shanba kunlari</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level -->
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V7l7-4z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Level talabi</p>
+                            {% if has_level %}
+                            <p class="text-sm font-semibold text-emerald-500">Mos keladi</p>
+                            <p class="text-xs text-slate-500">Sizning level: {{ current_level }}</p>
+                            {% else %}
+                            <p class="text-sm font-semibold text-red-500">Yetarli emas</p>
+                            <p class="text-xs text-slate-500">Kerakli level: {{ required_level }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Balance -->
+                <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h14a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7V6a2 2 0 012-2h12"/>
+                                <circle cx="16.5" cy="12" r="1.5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Balans</p>
+                            {% if can_afford %}
+                            <p class="text-sm font-semibold text-emerald-500">Coin yetarli</p>
+                            <p class="text-xs text-slate-500">{{ current_user.coin_balance }} Coin mavjud</p>
+                            {% else %}
+                            <p class="text-sm font-semibold text-red-500">Coin yetmaydi</p>
+                            <p class="text-xs text-slate-500">Yetishmaydi: {{ shortage }} Coin</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Stock -->
-        <div class="flex items-center gap-2 text-sm text-slate-500">
-            <span>??</span>
-            {% if product.stock > 10 %}
-            <span class="text-emerald-600 font-medium">Mavjud</span>
-            {% elif product.stock > 0 %}
-            <span class="text-amber-600 font-medium">Qoldi: {{ product.stock }} ta</span>
-            {% else %}
-            <span class="text-red-500 font-medium">Mavjud emas</span>
-            {% endif %}
-        </div>
+        <!-- Purchase Panel -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+                <p class="text-xs text-slate-400">Narx</p>
+                <div class="mt-3 flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-coin-50 flex items-center justify-center text-coin-600">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <circle cx="12" cy="12" r="8"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 10h6M9 12h6M9 14h4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-extrabold text-coin-700">{{ product.price_coin }}</p>
+                        <p class="text-xs text-coin-600">Coin</p>
+                    </div>
+                    <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Level {{ required_level }}</span>
+                </div>
+            </div>
 
-        <!-- Balance info -->
-        <div class="p-3 {% if can_afford %}bg-emerald-50 border border-emerald-200{% else %}bg-red-50 border border-red-200{% endif %} rounded-xl text-sm">
-            <p class="{% if can_afford %}text-emerald-700{% else %}text-red-600{% endif %} font-medium">
-                {% if can_afford %}
-                Sotib olish uchun Coin yetarli ({{ current_user.coin_balance }} Coin)
-                {% else %}
-                Bu xarid uchun {{ shortage }} Coin yetmaydi (balansingiz: {{ current_user.coin_balance }} Coin)
+            <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-semibold text-slate-700">Xarid qilish</p>
+                    {% if product.stock == 0 %}
+                    <span class="text-xs font-semibold text-red-500">Mavjud emas</span>
+                    {% elif not store_open %}
+                    <span class="text-xs font-semibold text-amber-500">Do'kon yopiq</span>
+                    {% elif not has_level %}
+                    <span class="text-xs font-semibold text-red-500">Level yetmaydi</span>
+                    {% elif not can_afford %}
+                    <span class="text-xs font-semibold text-red-500">Coin yetmaydi</span>
+                    {% else %}
+                    <span class="text-xs font-semibold text-emerald-500">Tayyor</span>
+                    {% endif %}
+                </div>
+
+                {% if not store_open %}
+                <div class="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                    Do'kon faqat Chorshanba va Shanba kunlari ochiq.
+                </div>
                 {% endif %}
-            </p>
-        </div>
+                {% if not has_level %}
+                <div class="text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+                    Kerakli level: {{ required_level }}. Sizning level: {{ current_level }}.
+                </div>
+                {% endif %}
 
-        <!-- Buy button -->
-        {% if product.is_active and product.stock > 0 and store_open and has_level %}
-        {% if can_afford %}
-        <form method="POST" action="{{ url_for('store.buy_product', product_id=product.id) }}"
-            onsubmit="return confirm('Haqiqatan ham {{ product.title }} ni {{ product.price_coin }} Coin ga sotib olmoqchimisiz?')">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="w-full py-4 gradient-coin text-white font-bold rounded-2xl text-lg shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200">
-                ?? {{ product.price_coin }} Coin ga sotib olish
-            </button>
-        </form>
-        {% else %}
-        <button disabled class="w-full py-4 bg-slate-200 text-slate-400 font-bold rounded-2xl text-lg cursor-not-allowed">
-            Coin yetarli emas
-        </button>
-        {% endif %}
-        {% else %}
-        <button disabled class="w-full py-4 bg-slate-200 text-slate-400 font-bold rounded-2xl text-lg cursor-not-allowed">
-            Xarid qilish mumkin emas
-        </button>
-        {% endif %}
+                {% if product.is_active and product.stock > 0 and store_open and has_level %}
+                {% if can_afford %}
+                <form method="POST" action="{{ url_for('store.buy_product', product_id=product.id) }}"
+                    onsubmit="return confirm('Haqiqatan ham {{ product.title }} ni {{ product.price_coin }} Coin ga sotib olmoqchimisiz?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="w-full py-3 gradient-coin text-white font-bold rounded-2xl text-base shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200">
+                        Sotib olish
+                    </button>
+                </form>
+                {% else %}
+                <button disabled class="w-full py-3 bg-slate-200 text-slate-400 font-bold rounded-2xl text-base cursor-not-allowed">
+                    Coin yetarli emas
+                </button>
+                {% endif %}
+                {% else %}
+                <button disabled class="w-full py-3 bg-slate-200 text-slate-400 font-bold rounded-2xl text-base cursor-not-allowed">
+                    Xarid qilish mumkin emas
+                </button>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
