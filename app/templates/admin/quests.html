@@ -5,8 +5,8 @@
 {% block content %}
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Kvestlar</h2>
-        <p class="text-sm text-slate-500 mt-1">O'quvchilar uchun kunlik va haftalik topshiriqlarni boshqarish</p>
+        <h2 class="text-2xl font-bold text-slate-100">Kvestlar</h2>
+        <p class="text-sm muted mt-1">O'quvchilar uchun kunlik va haftalik topshiriqlarni boshqarish</p>
     </div>
     <a href="{{ url_for('admin.create_quest') }}" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -17,7 +17,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left text-sm whitespace-nowrap">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-semibold border-b border-slate-200">
+            <thead class="bg-slate-900/30 text-slate-300 uppercase text-xs font-semibold border-b border-slate-200">
                 <tr>
                     <th class="px-6 py-4">Nomi & Tur</th>
                     <th class="px-6 py-4">Mukofot</th>
@@ -27,10 +27,10 @@
             </thead>
             <tbody class="divide-y divide-slate-100">
                 {% for q in quests %}
-                <tr class="hover:bg-slate-50/50 transition-colors">
+                <tr class="hover:bg-slate-900/30/50 transition-colors">
                     <td class="px-6 py-4">
-                        <p class="font-medium text-slate-800">{{ q.title }}</p>
-                        <p class="text-xs text-slate-500 capitalize">{{ q.quest_type }}ly</p>
+                        <p class="font-medium text-slate-100">{{ q.title }}</p>
+                        <p class="text-xs muted capitalize">{{ q.quest_type }}ly</p>
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex flex-col gap-1">
@@ -44,14 +44,14 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Faol
                         </span>
                         {% else %}
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Faol emas
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-100">
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-900/300"></span> Faol emas
                         </span>
                         {% endif %}
                     </td>
                     <td class="px-6 py-4 text-right space-x-2">
                         <form action="{{ url_for('admin.toggle_quest', id=q.id) }}" method="POST" class="inline">
-                            <button class="text-slate-400 hover:text-slate-600" title="Faollikni o'zgartirish">
+                            <button class="muted hover:text-slate-300" title="Faollikni o'zgartirish">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </form>
@@ -62,7 +62,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4" class="px-6 py-8 text-center text-slate-500">
+                    <td colspan="4" class="px-6 py-8 text-center muted">
                         Kvestlar po'q. Yangi kvest qo'shing.
                     </td>
                 </tr>
@@ -72,3 +72,4 @@
     </div>
 </div>
 {% endblock %}
+

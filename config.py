@@ -57,3 +57,6 @@ config = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
+# Allow `config.asgi` import path used by current Railway service start command.
+__path__ = [os.path.dirname(__file__)]
