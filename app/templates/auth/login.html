@@ -1,48 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Kirish{% endblock %}
 {% block body %}
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-50 via-white to-coin-50 p-4">
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center mb-4">
-                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Kelajak Ta'lim Logo" class="w-24 h-24 rounded-2xl shadow-lg object-contain bg-white p-1">
-            </div>
-            <h1 class="text-2xl font-bold text-slate-800">Kelajak Ta'lim</h1>
-            <p class="text-slate-500 text-sm mt-1">Sizning Coin tizimingiz</p>
-        </div>
-
-        <!-- Card -->
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
-            <h2 class="text-xl font-bold text-slate-800 mb-6">Tizimga kirish</h2>
-            <form method="POST" class="space-y-4">
-                {{ form.hidden_tag() }}
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.username.label.text }}</label>
-                    {{ form.username(class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent transition text-slate-800 bg-slate-50", placeholder="Login yoki Email") }}
-                    {% for error in form.username.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">{{ form.password.label.text }}</label>
-                    {{ form.password(class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent transition text-slate-800 bg-slate-50", placeholder="Parol") }}
-                    {% for error in form.password.errors %}<p class="text-red-500 text-xs mt-1">{{ error }}</p>{% endfor %}
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                    <div class="flex items-center">
-                        {{ form.remember_me(class="rounded text-brand-500") }}
-                        <label class="ml-2 text-sm text-slate-600">Meni eslab qol</label>
-                    </div>
-                    <a href="{{ url_for('auth.reset_request') }}" class="text-sm text-brand-600 hover:underline">Parolni unutdingizmi?</a>
-                </div>
-                <button type="submit" class="w-full py-3 rounded-xl gradient-brand text-white font-semibold shadow-lg hover:opacity-90 active:scale-95 transition-all duration-200">
-                    Kirish →
-                </button>
-            </form>
-
-            <div class="mt-6 pt-6 border-t border-slate-100 text-center">
-                <p class="text-sm text-slate-500">Akkaunt yo'qmi? <a href="{{ url_for('auth.register') }}" class="text-brand-600 font-medium hover:underline">Ro'yxatdan o'ting</a></p>
-            </div>
-</div>
+<div class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-6">
+      <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-20 h-20 mx-auto rounded-xl bg-white/90 p-1.5 object-contain">
+      <h1 class="mt-4 text-2xl font-semibold tracking-tight">Kelajak Ta'lim</h1>
+      <p class="text-sm muted mt-1">Coin tizimiga kirish</p>
     </div>
+
+    <div class="card p-6">
+      <h2 class="text-xl font-semibold mb-5">Tizimga kirish</h2>
+      <form method="POST" class="space-y-4">
+        {{ form.hidden_tag() }}
+        <div>
+          <label class="block text-sm muted mb-1">{{ form.username.label.text }}</label>
+          {{ form.username(class="w-full px-4 py-3 text-sm", placeholder="Login yoki Email") }}
+          {% for error in form.username.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="block text-sm muted mb-1">{{ form.password.label.text }}</label>
+          {{ form.password(class="w-full px-4 py-3 text-sm", placeholder="Parol") }}
+          {% for error in form.password.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <label class="inline-flex items-center gap-2 muted">{{ form.remember_me() }} <span>Meni eslab qol</span></label>
+          <a href="{{ url_for('auth.reset_request') }}" class="accent hover:underline">Parolni unutdingizmi?</a>
+        </div>
+        <button type="submit" class="w-full btn-primary py-3">Kirish</button>
+      </form>
+
+      <div class="mt-5 pt-5 border-t border-slate-700/60 text-center text-sm muted">
+        Akkaunt yo'qmi? <a href="{{ url_for('auth.register') }}" class="accent hover:underline">Ro'yxatdan o'ting</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
