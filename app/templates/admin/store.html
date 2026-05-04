@@ -2,38 +2,41 @@
 {% block page_title %}Do'kon boshqaruvi{% endblock %}
 {% block content %}
 <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
-  <div><h2 class="font-semibold">Mahsulotlar</h2><p class="text-xs muted">Jami {{ stats.total }} · Faol {{ stats.active }}</p></div>
-  <div class="flex gap-2"><a href="{{ url_for('admin.categories') }}" class="btn-ghost px-4 py-2 text-sm">Kategoriyalar</a><a href="{{ url_for('admin.create_product') }}" class="btn-primary px-4 py-2 text-sm">Yangi mahsulot</a></div>
+ <div><h2 class="font-semibold">Mahsulotlar</h2><p class="text-xs muted">Jami {{ stats.total }} - Faol {{ stats.active }}</p></div>
+ <div class="flex gap-2"><a href="{{ url_for('admin.categories') }}" class="btn-ghost px-4 py-2 text-sm">Kategoriyalar</a><a href="{{ url_for('admin.create_product') }}" class="btn-primary px-4 py-2 text-sm">Yangi mahsulot</a></div>
 </div>
 
 <div class="card p-4 mb-5">
-  <form method="GET" class="grid grid-cols-1 md:grid-cols-6 gap-3">
-    <input type="text" name="q" value="{{ search }}" placeholder="Qidirish" class="md:col-span-2 px-3 py-2.5 text-sm">
-    <select name="category" class="px-3 py-2.5 text-sm"><option value="">Kategoriya</option>{% for cat in categories %}<option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}</select>
-    <select name="status" class="px-3 py-2.5 text-sm"><option value="">Holat</option><option value="active" {% if status == 'active' %}selected{% endif %}>Faol</option><option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Faol emas</option></select>
-    <select name="stock" class="px-3 py-2.5 text-sm"><option value="">Ombor</option><option value="low" {% if stock == 'low' %}selected{% endif %}>Kam</option><option value="out" {% if stock == 'out' %}selected{% endif %}>Tugagan</option></select>
-    <button class="btn-primary px-4 py-2.5 text-sm">Filtrlash</button>
-  </form>
+ <form method="GET" class="grid grid-cols-1 md:grid-cols-6 gap-3">
+  <input type="text" name="q" value="{{ search }}" placeholder="Qidirish" class="md:col-span-2 px-3 py-2.5 text-sm">
+  <select name="category" class="px-3 py-2.5 text-sm"><option value="">Kategoriya</option>{% for cat in categories %}<option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}</select>
+  <select name="status" class="px-3 py-2.5 text-sm"><option value="">Holat</option><option value="active" {% if status == 'active' %}selected{% endif %}>Faol</option><option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Faol emas</option></select>
+  <select name="stock" class="px-3 py-2.5 text-sm"><option value="">Ombor</option><option value="low" {% if stock == 'low' %}selected{% endif %}>Kam</option><option value="out" {% if stock == 'out' %}selected{% endif %}>Tugagan</option></select>
+  <button class="btn-primary px-4 py-2.5 text-sm">Filtrlash</button>
+ </form>
 </div>
 
 <div class="card overflow-hidden">
-  <div class="overflow-x-auto">
-    <table class="w-full table-clean">
-      <thead><tr><th class="text-left px-5 py-3 text-xs muted">Mahsulot</th><th class="text-left px-5 py-3 text-xs muted">Kategoriya</th><th class="text-left px-5 py-3 text-xs muted">Narx</th><th class="text-left px-5 py-3 text-xs muted">Ombor</th><th class="text-left px-5 py-3 text-xs muted">Holat</th><th class="px-5 py-3"></th></tr></thead>
-      <tbody>
-      {% for product in products.items %}
-        <tr class="border-t border-slate-700/50">
-          <td class="px-5 py-3"><p class="text-sm">{{ product.title }}</p><p class="text-xs muted">ID {{ product.id }}</p></td>
-          <td class="px-5 py-3 text-xs">{{ product.category.name if product.category else 'Kategoriyasiz' }}</td>
-          <td class="px-5 py-3 text-sm accent">{{ product.price_coin }}</td>
-          <td class="px-5 py-3 text-xs">{{ product.stock }}</td>
-          <td class="px-5 py-3 text-xs">{{ 'Faol' if product.is_active else 'Faol emas' }}</td>
-          <td class="px-5 py-3"><div class="flex gap-2 justify-end"><a class="btn-ghost px-3 py-1.5 text-xs" href="{{ url_for('admin.edit_product', product_id=product.id) }}">Tahrirlash</a></div></td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
+ <div class="overflow-x-auto">
+  <table class="w-full table-clean">
+   <thead><tr><th class="text-left px-5 py-3 text-xs muted">Mahsulot</th><th class="text-left px-5 py-3 text-xs muted">Kategoriya</th><th class="text-left px-5 py-3 text-xs muted">Narx</th><th class="text-left px-5 py-3 text-xs muted">Ombor</th><th class="text-left px-5 py-3 text-xs muted">Holat</th><th class="px-5 py-3"></th></tr></thead>
+   <tbody>
+   {% for product in products.items %}
+    <tr class="border-t border-slate-700/50">
+     <td class="px-5 py-3"><p class="text-sm">{{ product.title }}</p><p class="text-xs muted">ID {{ product.id }}</p></td>
+     <td class="px-5 py-3 text-xs">{{ product.category.name if product.category else 'Kategoriyasiz' }}</td>
+     <td class="px-5 py-3 text-sm accent">{{ product.price_coin }}</td>
+     <td class="px-5 py-3 text-xs">{{ product.stock }}</td>
+     <td class="px-5 py-3 text-xs">{{ 'Faol' if product.is_active else 'Faol emas' }}</td>
+     <td class="px-5 py-3"><div class="flex gap-2 justify-end"><a class="btn-ghost px-3 py-1.5 text-xs" href="{{ url_for('admin.edit_product', product_id=product.id) }}">Tahrirlash</a></div></td>
+    </tr>
+   {% endfor %}
+   </tbody>
+  </table>
+ </div>
 </div>
 {% endblock %}
+
+
+
 

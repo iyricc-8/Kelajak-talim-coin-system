@@ -1,131 +1,131 @@
 ﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Coin System{% endblock %} | Kelajak Talim</title>
-    <meta name="description" content="O'quvchilarni rag'batlantirish uchun Coin tizimli ta'lim platformasi">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            950: '#060b14',
-                            900: '#0a1324',
-                            800: '#11203b',
-                            700: '#183158',
-                            600: '#274978',
-                            500: '#335e97'
-                        },
-                        accent: {
-                            500: '#d4a92a',
-                            400: '#e0ba50'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Coin System{% endblock %} | Kelajak Talim</title>
+  <meta name="description" content="O'quvchilarni rag'batlantirish uchun Coin tizimli ta'lim platformasi">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              950: '#060b14',
+              900: '#0a1324',
+              800: '#11203b',
+              700: '#183158',
+              600: '#274978',
+              500: '#335e97'
+            },
+            accent: {
+              500: '#d4a92a',
+              400: '#e0ba50'
             }
+          }
         }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            color-scheme: dark;
-            --bg: #070d18;
-            --bg-soft: #0d1628;
-            --card: #0f1b30;
-            --border: #233655;
-            --text: #e7eefb;
-            --muted: #8fa0bd;
-            --accent: #d4a92a;
-            --accent-soft: rgba(212, 169, 42, 0.14);
-            --danger: #d14b57;
-            --success: #2f9f7e;
-        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070d18;
+      --bg-soft: #0d1628;
+      --card: #0f1b30;
+      --border: #233655;
+      --text: #e7eefb;
+      --muted: #8fa0bd;
+      --accent: #d4a92a;
+      --accent-soft: rgba(212, 169, 42, 0.14);
+      --danger: #d14b57;
+      --success: #2f9f7e;
+    }
 
-        * { font-family: 'IBM Plex Sans', sans-serif; }
+    * { font-family: 'IBM Plex Sans', sans-serif; }
 
-        body {
-            color: var(--text);
-            background:
-                radial-gradient(80rem 40rem at -5% -10%, rgba(39,73,120,0.28), transparent 55%),
-                radial-gradient(70rem 30rem at 105% -10%, rgba(212,169,42,0.12), transparent 50%),
-                var(--bg);
-        }
+    body {
+      color: var(--text);
+      background:
+        radial-gradient(80rem 40rem at -5% -10%, rgba(39,73,120,0.28), transparent 55%),
+        radial-gradient(70rem 30rem at 105% -10%, rgba(212,169,42,0.12), transparent 50%),
+        var(--bg);
+    }
 
-        .app-shell { background: transparent; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
-        .panel { background: rgba(12, 21, 37, 0.82); border: 1px solid var(--border); backdrop-filter: blur(8px); }
-        .muted { color: var(--muted); }
-        .accent { color: var(--accent); }
+    .app-shell { background: transparent; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+    .panel { background: rgba(12, 21, 37, 0.82); border: 1px solid var(--border); backdrop-filter: blur(8px); }
+    .muted { color: var(--muted); }
+    .accent { color: var(--accent); }
 
-        .btn-primary {
-            background: linear-gradient(180deg, #e0ba50 0%, #d4a92a 100%);
-            color: #1b2436;
-            border: 1px solid #c79b1f;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: all .18s ease;
-        }
-        .btn-primary:hover { filter: brightness(1.04); transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(180deg, #e0ba50 0%, #d4a92a 100%);
+      color: #1b2436;
+      border: 1px solid #c79b1f;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all .18s ease;
+    }
+    .btn-primary:hover { filter: brightness(1.04); transform: translateY(-1px); }
 
-        .btn-ghost {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-        }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
 
-        input, select, textarea {
-            background: #091224 !important;
-            border: 1px solid var(--border) !important;
-            color: var(--text) !important;
-            border-radius: 10px !important;
-        }
-        input::placeholder, textarea::placeholder { color: #7284a2 !important; }
+    input, select, textarea {
+      background: #091224 !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text) !important;
+      border-radius: 10px !important;
+    }
+    input::placeholder, textarea::placeholder { color: #7284a2 !important; }
 
-        .table-clean thead { background: rgba(17,32,59,.45); }
-        .table-clean tr { border-color: var(--border) !important; }
+    .table-clean thead { background: rgba(17,32,59,.45); }
+    .table-clean tr { border-color: var(--border) !important; }
 
-        .flash {
-            border: 1px solid var(--border);
-            background: #0f1b30;
-            border-left-width: 4px;
-        }
-        .flash-success { border-left-color: var(--success); }
-        .flash-danger { border-left-color: var(--danger); }
-        .flash-warning { border-left-color: var(--accent); }
-        .flash-info { border-left-color: #4a7fcf; }
+    .flash {
+      border: 1px solid var(--border);
+      background: #0f1b30;
+      border-left-width: 4px;
+    }
+    .flash-success { border-left-color: var(--success); }
+    .flash-danger { border-left-color: var(--danger); }
+    .flash-warning { border-left-color: var(--accent); }
+    .flash-info { border-left-color: #4a7fcf; }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0b1527; }
-        ::-webkit-scrollbar-thumb { background: #273d60; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #31507d; }
-    </style>
-    {% block head %}{% endblock %}
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b1527; }
+    ::-webkit-scrollbar-thumb { background: #273d60; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #31507d; }
+  </style>
+  {% block head %}{% endblock %}
 </head>
 <body>
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 <div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm" id="flash-container">
-    {% for category, message in messages %}
-    <div class="flash {% if category == 'success' %}flash-success{% elif category == 'danger' %}flash-danger{% elif category == 'warning' %}flash-warning{% else %}flash-info{% endif %} rounded-xl p-3 text-sm shadow-lg flex items-start gap-2">
-        <span class="mt-1 h-1.5 w-1.5 rounded-full bg-slate-300"></span>
-        <div class="flex-1">{{ message }}</div>
-        <button onclick="this.parentElement.remove()" class="muted hover:text-slate-100 text-xs">Yopish</button>
-    </div>
-    {% endfor %}
+  {% for category, message in messages %}
+  <div class="flash {% if category == 'success' %}flash-success{% elif category == 'danger' %}flash-danger{% elif category == 'warning' %}flash-warning{% else %}flash-info{% endif %} rounded-xl p-3 text-sm shadow-lg flex items-start gap-2">
+    <span class="mt-1 h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+    <div class="flex-1">{{ message }}</div>
+    <button onclick="this.parentElement.remove()" class="muted hover:text-slate-100 text-xs">Yopish</button>
+  </div>
+  {% endfor %}
 </div>
 <script>
 setTimeout(function () {
-    document.querySelectorAll('#flash-container .flash').forEach(function (el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(-6px)';
-        setTimeout(function () { el.remove(); }, 240);
-    });
+  document.querySelectorAll('#flash-container .flash').forEach(function (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-6px)';
+    setTimeout(function () { el.remove(); }, 240);
+  });
 }, 4600);
 </script>
 {% endif %}
@@ -134,4 +134,7 @@ setTimeout(function () {
 {% block body %}{% endblock %}
 </body>
 </html>
+
+
+
 

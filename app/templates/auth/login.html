@@ -2,77 +2,80 @@
 {% block title %}Kirish{% endblock %}
 {% block body %}
 <div class="min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
-    <div class="text-center mb-6">
-      <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-20 h-20 mx-auto rounded-xl bg-white/90 p-1.5 object-contain">
-      <h1 class="mt-4 text-2xl font-semibold tracking-tight">Kelajak Ta'lim</h1>
-      <p class="text-sm muted mt-1">Coin tizimiga kirish</p>
-    </div>
-
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold mb-5">Tizimga kirish</h2>
-      <form method="POST" class="space-y-4">
-        {{ form.hidden_tag() }}
-        <div>
-          <label class="block text-sm muted mb-1">{{ form.username.label.text }}</label>
-          {{ form.username(class="w-full px-4 py-3 text-sm", placeholder="Login yoki Email") }}
-          {% for error in form.username.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
-        </div>
-        <div>
-          <label class="block text-sm muted mb-1">{{ form.password.label.text }}</label>
-          <div class="relative">
-            {{ form.password(id="password-input", class="w-full px-4 py-3 pr-11 text-sm", placeholder="Parol") }}
-            <button
-              type="button"
-              id="toggle-password"
-              class="absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 transition"
-              aria-label="Parolni ko'rsatish"
-              aria-pressed="false"
-            >
-              <svg id="eye-open" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-              <svg id="eye-closed" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.2 5.3A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-3.1 3.9"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.2 6.2C3.8 8 2 12 2 12s3.5 7 10 7a10.9 10.9 0 0 0 5.2-1.3"/>
-              </svg>
-            </button>
-          </div>
-          {% for error in form.password.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
-        </div>
-        <div class="flex items-center justify-between text-sm">
-          <label class="inline-flex items-center gap-2 muted">{{ form.remember_me() }} <span>Meni eslab qol</span></label>
-          <a href="{{ url_for('auth.reset_request') }}" class="accent hover:underline">Parolni unutdingizmi?</a>
-        </div>
-        <button type="submit" class="w-full btn-primary py-3">Kirish</button>
-      </form>
-
-      <div class="mt-5 pt-5 border-t border-slate-700/60 text-center text-sm muted">
-        Akkaunt yo'qmi? <a href="{{ url_for('auth.register') }}" class="accent hover:underline">Ro'yxatdan o'ting</a>
-      </div>
-    </div>
+ <div class="w-full max-w-md">
+  <div class="text-center mb-6">
+   <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-20 h-20 mx-auto rounded-xl bg-white/90 p-1.5 object-contain">
+   <h1 class="mt-4 text-2xl font-semibold tracking-tight">Kelajak Ta'lim</h1>
+   <p class="text-sm muted mt-1">Coin tizimiga kirish</p>
   </div>
+
+  <div class="card p-6">
+   <h2 class="text-xl font-semibold mb-5">Tizimga kirish</h2>
+   <form method="POST" class="space-y-4">
+    {{ form.hidden_tag() }}
+    <div>
+     <label class="block text-sm muted mb-1">{{ form.username.label.text }}</label>
+     {{ form.username(class="w-full px-4 py-3 text-sm", placeholder="Login yoki Email") }}
+     {% for error in form.username.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
+    </div>
+    <div>
+     <label class="block text-sm muted mb-1">{{ form.password.label.text }}</label>
+     <div class="relative">
+      {{ form.password(id="password-input", class="w-full px-4 py-3 pr-11 text-sm", placeholder="Parol") }}
+      <button
+       type="button"
+       id="toggle-password"
+       class="absolute inset-y-0 right-0 px-3 text-slate-400 hover:text-slate-200 transition"
+       aria-label="Parolni ko'rsatish"
+       aria-pressed="false"
+      >
+       <svg id="eye-open" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
+        <circle cx="12" cy="12" r="3"/>
+       </svg>
+       <svg id="eye-closed" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.2 5.3A11 11 0 0 1 12 5c6.5 0 10 7 10 7a16 16 0 0 1-3.1 3.9"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.2 6.2C3.8 8 2 12 2 12s3.5 7 10 7a10.9 10.9 0 0 0 5.2-1.3"/>
+       </svg>
+      </button>
+     </div>
+     {% for error in form.password.errors %}<p class="text-red-300 text-xs mt-1">{{ error }}</p>{% endfor %}
+    </div>
+    <div class="flex items-center justify-between text-sm">
+     <label class="inline-flex items-center gap-2 muted">{{ form.remember_me() }} <span>Meni eslab qol</span></label>
+     <a href="{{ url_for('auth.reset_request') }}" class="accent hover:underline">Parolni unutdingizmi?</a>
+    </div>
+    <button type="submit" class="w-full btn-primary py-3">Kirish</button>
+   </form>
+
+   <div class="mt-5 pt-5 border-t border-slate-700/60 text-center text-sm muted">
+    Akkaunt yo'qmi? <a href="{{ url_for('auth.register') }}" class="accent hover:underline">Ro'yxatdan o'ting</a>
+   </div>
+  </div>
+ </div>
 </div>
 <script>
-  (function () {
-    const input = document.getElementById('password-input');
-    const toggle = document.getElementById('toggle-password');
-    const eyeOpen = document.getElementById('eye-open');
-    const eyeClosed = document.getElementById('eye-closed');
-    if (!input || !toggle) return;
+ (function () {
+  const input = document.getElementById('password-input');
+  const toggle = document.getElementById('toggle-password');
+  const eyeOpen = document.getElementById('eye-open');
+  const eyeClosed = document.getElementById('eye-closed');
+  if (!input || !toggle) return;
 
-    toggle.addEventListener('click', function () {
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      eyeOpen.classList.toggle('hidden', isHidden);
-      eyeClosed.classList.toggle('hidden', !isHidden);
-      toggle.setAttribute('aria-pressed', String(isHidden));
-      toggle.setAttribute('aria-label', isHidden ? "Parolni yashirish" : "Parolni ko'rsatish");
-    });
-  })();
+  toggle.addEventListener('click', function () {
+   const isHidden = input.type === 'password';
+   input.type = isHidden ? 'text' : 'password';
+   eyeOpen.classList.toggle('hidden', isHidden);
+   eyeClosed.classList.toggle('hidden', !isHidden);
+   toggle.setAttribute('aria-pressed', String(isHidden));
+   toggle.setAttribute('aria-label', isHidden ? "Parolni yashirish" : "Parolni ko'rsatish");
+  });
+ })();
 </script>
 {% endblock %}
+
+
+
 

@@ -2,41 +2,44 @@
 {% block page_title %}Foydalanuvchilar{% endblock %}
 {% block content %}
 <div class="flex items-center justify-between mb-4">
-  <div class="text-sm muted">Boshqaruv paneli</div>
-  <a href="{{ url_for('admin.coins') }}" class="px-4 py-2 btn-primary text-sm">Coin hisoblash</a>
+ <div class="text-sm muted">Boshqaruv paneli</div>
+ <a href="{{ url_for('admin.coins') }}" class="px-4 py-2 btn-primary text-sm">Coin hisoblash</a>
 </div>
 
 <div class="card p-4 mb-5">
-  <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
-    <input type="text" name="q" value="{{ search }}" placeholder="Qidirish..." class="md:col-span-2 px-3 py-2.5 text-sm">
-    <select name="role" class="px-3 py-2.5 text-sm">
-      <option value="">Barcha rollar</option>
-      <option value="student" {% if role_filter == 'student' %}selected{% endif %}>O'quvchi</option>
-      <option value="teacher" {% if role_filter == 'teacher' %}selected{% endif %}>O'qituvchi</option>
-      <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Administrator</option>
-    </select>
-    <button class="btn-primary px-4 py-2.5 text-sm" type="submit">Filtrlash</button>
-  </form>
+ <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+  <input type="text" name="q" value="{{ search }}" placeholder="Qidirish..." class="md:col-span-2 px-3 py-2.5 text-sm">
+  <select name="role" class="px-3 py-2.5 text-sm">
+   <option value="">Barcha rollar</option>
+   <option value="student" {% if role_filter == 'student' %}selected{% endif %}>O'quvchi</option>
+   <option value="teacher" {% if role_filter == 'teacher' %}selected{% endif %}>O'qituvchi</option>
+   <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Administrator</option>
+  </select>
+  <button class="btn-primary px-4 py-2.5 text-sm" type="submit">Filtrlash</button>
+ </form>
 </div>
 
 <div class="card overflow-hidden">
-  <div class="overflow-x-auto">
-    <table class="w-full table-clean">
-      <thead><tr><th class="text-left px-5 py-3 text-xs muted">Foydalanuvchi</th><th class="text-left px-5 py-3 text-xs muted">Rol</th><th class="text-left px-5 py-3 text-xs muted">Balans</th><th class="text-left px-5 py-3 text-xs muted">Holat</th><th class="text-left px-5 py-3 text-xs muted">Sana</th><th class="px-5 py-3"></th></tr></thead>
-      <tbody>
-      {% for user in users.items %}
-        <tr class="border-t border-slate-700/50">
-          <td class="px-5 py-3"><p class="text-sm">{{ user.full_name }}</p><p class="text-xs muted">@{{ user.username }} · {{ user.email }}</p></td>
-          <td class="px-5 py-3 text-xs">{{ user.role }}</td>
-          <td class="px-5 py-3 text-sm accent">{{ user.coin_balance }}</td>
-          <td class="px-5 py-3 text-xs">{{ 'Faol' if user.is_active else 'Bloklangan' }}</td>
-          <td class="px-5 py-3 text-xs muted">{{ user.created_at.strftime('%d.%m.%Y') }}</td>
-          <td class="px-5 py-3 text-right"><a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="text-sm accent">Ochish</a></td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
+ <div class="overflow-x-auto">
+  <table class="w-full table-clean">
+   <thead><tr><th class="text-left px-5 py-3 text-xs muted">Foydalanuvchi</th><th class="text-left px-5 py-3 text-xs muted">Rol</th><th class="text-left px-5 py-3 text-xs muted">Balans</th><th class="text-left px-5 py-3 text-xs muted">Holat</th><th class="text-left px-5 py-3 text-xs muted">Sana</th><th class="px-5 py-3"></th></tr></thead>
+   <tbody>
+   {% for user in users.items %}
+    <tr class="border-t border-slate-700/50">
+     <td class="px-5 py-3"><p class="text-sm">{{ user.full_name }}</p><p class="text-xs muted">@{{ user.username }} - {{ user.email }}</p></td>
+     <td class="px-5 py-3 text-xs">{{ user.role }}</td>
+     <td class="px-5 py-3 text-sm accent">{{ user.coin_balance }}</td>
+     <td class="px-5 py-3 text-xs">{{ 'Faol' if user.is_active else 'Bloklangan' }}</td>
+     <td class="px-5 py-3 text-xs muted">{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+     <td class="px-5 py-3 text-right"><a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="text-sm accent">Ochish</a></td>
+    </tr>
+   {% endfor %}
+   </tbody>
+  </table>
+ </div>
 </div>
 {% endblock %}
+
+
+
 

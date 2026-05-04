@@ -1,94 +1,97 @@
 ﻿{% extends "base.html" %}
 {% block body %}
 <div class="app-shell min-h-screen flex">
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/55 z-30 lg:hidden hidden" onclick="toggleSidebar()"></div>
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/55 z-30 lg:hidden hidden" onclick="toggleSidebar()"></div>
 
-    <aside id="student-sidebar" class="fixed inset-y-0 left-0 z-40 w-72 panel border-r border-slate-700/60 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
-        <div class="px-5 py-4 border-b border-slate-700/60 flex items-center gap-3">
-            <div class="h-10 w-10 rounded-xl bg-white/95 p-1.5"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="h-full w-full object-contain rounded-lg"></div>
-            <div>
-                <p class="font-semibold tracking-tight">Kelajak Ta'lim</p>
-                <p class="text-xs muted uppercase tracking-wider">Coin System</p>
-            </div>
-        </div>
+  <aside id="student-sidebar" class="fixed inset-y-0 left-0 z-40 w-72 panel border-r border-slate-700/60 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+    <div class="px-5 py-4 border-b border-slate-700/60 flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-white/95 p-1.5"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="h-full w-full object-contain rounded-lg"></div>
+      <div>
+        <p class="font-semibold tracking-tight">Kelajak Ta'lim</p>
+        <p class="text-xs muted uppercase tracking-wider">Coin System</p>
+      </div>
+    </div>
 
-        <div class="m-4 card p-4">
-            <p class="text-xs muted uppercase tracking-wide">Balans</p>
-            <div class="mt-2 flex items-end gap-2">
-                <span class="text-2xl font-semibold accent">{{ current_user.coin_balance }}</span>
-                <span class="text-sm muted mb-0.5">coin</span>
-            </div>
-        </div>
+    <div class="m-4 card p-4">
+      <p class="text-xs muted uppercase tracking-wide">Balans</p>
+      <div class="mt-2 flex items-end gap-2">
+        <span class="text-2xl font-semibold accent">{{ current_user.coin_balance }}</span>
+        <span class="text-sm muted mb-0.5">coin</span>
+      </div>
+    </div>
 
-        {% set nav_items = [
-            ('student.dashboard', 'Bosh sahifa', 'home'),
-            ('student.coins', 'Hamyon', 'wallet'),
-            ('transactions.transactions', 'Tranzaksiyalar', 'list'),
-            ('store.store', "Do'kon", 'store'),
-            ('student.orders', 'Buyurtmalarim', 'box'),
-            ('student.achievements', 'Yutuqlar', 'trophy'),
-            ('student.leaderboard', 'Reyting', 'chart'),
-            ('student.notifications', 'Bildirishnomalar', 'bell'),
-            ('student.profile', 'Profil', 'user')
-        ] %}
+    {% set nav_items = [
+      ('student.dashboard', 'Bosh sahifa', 'home'),
+      ('student.coins', 'Hamyon', 'wallet'),
+      ('transactions.transactions', 'Tranzaksiyalar', 'list'),
+      ('store.store', "Do'kon", 'store'),
+      ('student.orders', 'Buyurtmalarim', 'box'),
+      ('student.achievements', 'Yutuqlar', 'trophy'),
+      ('student.leaderboard', 'Reyting', 'chart'),
+      ('student.notifications', 'Bildirishnomalar', 'bell'),
+      ('student.profile', 'Profil', 'user')
+    ] %}
 
-        <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-            {% for endpoint, label, icon in nav_items %}
-            <a href="{{ url_for(endpoint) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl border transition {% if request.endpoint == endpoint %}bg-brand-800/70 border-brand-600/70 text-slate-100{% else %}border-transparent text-slate-300 hover:bg-brand-900/70 hover:border-slate-700/70{% endif %}">
-                <span class="w-4 h-4">{% if icon == 'home' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/></svg>{% elif icon == 'wallet' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M16 12h5"/><circle cx="16" cy="12" r="1"/></svg>{% elif icon == 'list' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>{% elif icon == 'store' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10h18l-1.2 10H4.2L3 10Z"/><path d="M5 10 7 4h10l2 6"/></svg>{% elif icon == 'box' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="m3 7 9 4 9-4v10l-9 4-9-4V7Z"/></svg>{% elif icon == 'trophy' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 4h10v3a5 5 0 0 1-10 0V4Z"/><path d="M9 17h6M10 20h4"/><path d="M7 7H4a3 3 0 0 0 3 3"/><path d="M17 7h3a3 3 0 0 1-3 3"/></svg>{% elif icon == 'chart' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V8"/><path d="M17 16v-3"/></svg>{% elif icon == 'bell' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9a6 6 0 1 1 12 0v4l1.5 2H4.5L6 13V9Z"/><path d="M10 17a2 2 0 0 0 4 0"/></svg>{% else %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>{% endif %}</span>
-                <span class="text-sm font-medium">{{ label }}</span>
-                {% if endpoint == 'student.notifications' and current_user.unread_notifications_count > 0 %}
-                <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-red-900/50 text-red-200 border border-red-800">{{ current_user.unread_notifications_count }}</span>
-                {% endif %}
-            </a>
-            {% endfor %}
+    <nav class="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+      {% for endpoint, label, icon in nav_items %}
+      <a href="{{ url_for(endpoint) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl border transition {% if request.endpoint == endpoint %}bg-brand-800/70 border-brand-600/70 text-slate-100{% else %}border-transparent text-slate-300 hover:bg-brand-900/70 hover:border-slate-700/70{% endif %}">
+        <span class="w-4 h-4">{% if icon == 'home' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/></svg>{% elif icon == 'wallet' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M16 12h5"/><circle cx="16" cy="12" r="1"/></svg>{% elif icon == 'list' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>{% elif icon == 'store' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10h18l-1.2 10H4.2L3 10Z"/><path d="M5 10 7 4h10l2 6"/></svg>{% elif icon == 'box' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="m3 7 9 4 9-4v10l-9 4-9-4V7Z"/></svg>{% elif icon == 'trophy' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 4h10v3a5 5 0 0 1-10 0V4Z"/><path d="M9 17h6M10 20h4"/><path d="M7 7H4a3 3 0 0 0 3 3"/><path d="M17 7h3a3 3 0 0 1-3 3"/></svg>{% elif icon == 'chart' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19h16"/><path d="M7 16v-5"/><path d="M12 16V8"/><path d="M17 16v-3"/></svg>{% elif icon == 'bell' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9a6 6 0 1 1 12 0v4l1.5 2H4.5L6 13V9Z"/><path d="M10 17a2 2 0 0 0 4 0"/></svg>{% else %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>{% endif %}</span>
+        <span class="text-sm font-medium">{{ label }}</span>
+        {% if endpoint == 'student.notifications' and current_user.unread_notifications_count > 0 %}
+        <span class="ml-auto text-xs px-2 py-0.5 rounded-full bg-red-900/50 text-red-200 border border-red-800">{{ current_user.unread_notifications_count }}</span>
+        {% endif %}
+      </a>
+      {% endfor %}
 
-            {% if current_user.is_teacher() %}
-            <div class="pt-2 mt-2 border-t border-slate-700/60">
-                <a href="{{ url_for('admin.dashboard') }}" class="block text-sm px-3 py-2 rounded-lg btn-ghost text-center">Admin panel</a>
-            </div>
-            {% endif %}
-        </nav>
-
-        <div class="p-4 border-t border-slate-700/60 flex items-center gap-3">
-            <div class="h-9 w-9 rounded-lg bg-brand-700 flex items-center justify-center text-sm font-semibold">{{ current_user.first_name[0] }}</div>
-            <div class="min-w-0 flex-1">
-                <p class="text-sm truncate">{{ current_user.full_name }}</p>
-                <p class="text-xs muted">{{ current_user.role }}</p>
-            </div>
-            <a href="{{ url_for('auth.logout') }}" class="text-xs text-red-300 hover:text-red-200">Chiqish</a>
-        </div>
-    </aside>
-
-    <main class="flex-1 lg:ml-72 min-w-0 pb-20 lg:pb-0">
-        <header class="lg:hidden sticky top-0 z-20 panel border-b border-slate-700/60 px-4 py-3 flex items-center justify-between">
-            <button onclick="toggleSidebar()" class="p-2 rounded-lg btn-ghost">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
-            <span class="text-sm font-medium">Kelajak Ta'lim</span>
-            <span class="text-sm accent font-semibold">{{ current_user.coin_balance }}</span>
-        </header>
-
-        <div class="p-4 lg:p-8">
-            {% block content %}{% endblock %}
-        </div>
-    </main>
-
-    <nav class="lg:hidden fixed bottom-0 inset-x-0 panel border-t border-slate-700/60 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="h-16 grid grid-cols-4 text-xs">
-            <a href="{{ url_for('student.dashboard') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.dashboard' %}accent{% else %}muted{% endif %}">Asosiy</a>
-            <a href="{{ url_for('store.store') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'store.store' %}accent{% else %}muted{% endif %}">Do'kon</a>
-            <a href="{{ url_for('student.leaderboard') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.leaderboard' %}accent{% else %}muted{% endif %}">Reyting</a>
-            <a href="{{ url_for('student.profile') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.profile' %}accent{% else %}muted{% endif %}">Profil</a>
-        </div>
+      {% if current_user.is_teacher() %}
+      <div class="pt-2 mt-2 border-t border-slate-700/60">
+        <a href="{{ url_for('admin.dashboard') }}" class="block text-sm px-3 py-2 rounded-lg btn-ghost text-center">Admin panel</a>
+      </div>
+      {% endif %}
     </nav>
+
+    <div class="p-4 border-t border-slate-700/60 flex items-center gap-3">
+      <div class="h-9 w-9 rounded-lg bg-brand-700 flex items-center justify-center text-sm font-semibold">{{ current_user.first_name[0] }}</div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm truncate">{{ current_user.full_name }}</p>
+        <p class="text-xs muted">{{ current_user.role }}</p>
+      </div>
+      <a href="{{ url_for('auth.logout') }}" class="text-xs text-red-300 hover:text-red-200">Chiqish</a>
+    </div>
+  </aside>
+
+  <main class="flex-1 lg:ml-72 min-w-0 pb-20 lg:pb-0">
+    <header class="lg:hidden sticky top-0 z-20 panel border-b border-slate-700/60 px-4 py-3 flex items-center justify-between">
+      <button onclick="toggleSidebar()" class="p-2 rounded-lg btn-ghost">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="text-sm font-medium">Kelajak Ta'lim</span>
+      <span class="text-sm accent font-semibold">{{ current_user.coin_balance }}</span>
+    </header>
+
+    <div class="p-4 lg:p-8">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 panel border-t border-slate-700/60 z-40" style="padding-bottom: env(safe-area-inset-bottom);">
+    <div class="h-16 grid grid-cols-4 text-xs">
+      <a href="{{ url_for('student.dashboard') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.dashboard' %}accent{% else %}muted{% endif %}">Asosiy</a>
+      <a href="{{ url_for('store.store') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'store.store' %}accent{% else %}muted{% endif %}">Do'kon</a>
+      <a href="{{ url_for('student.leaderboard') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.leaderboard' %}accent{% else %}muted{% endif %}">Reyting</a>
+      <a href="{{ url_for('student.profile') }}" class="flex flex-col items-center justify-center {% if request.endpoint == 'student.profile' %}accent{% else %}muted{% endif %}">Profil</a>
+    </div>
+  </nav>
 </div>
 
 <script>
 function toggleSidebar() {
-    document.getElementById('student-sidebar').classList.toggle('-translate-x-full');
-    document.getElementById('sidebar-overlay').classList.toggle('hidden');
+  document.getElementById('student-sidebar').classList.toggle('-translate-x-full');
+  document.getElementById('sidebar-overlay').classList.toggle('hidden');
 }
 </script>
 {% endblock %}
+
+
+
 

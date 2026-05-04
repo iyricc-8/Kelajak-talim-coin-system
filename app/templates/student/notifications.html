@@ -2,38 +2,41 @@
 {% block title %}Bildirishnomalar{% endblock %}
 {% block content %}
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-slate-100">рџ”” Bildirishnomalar</h1>
+  <h1 class="text-2xl font-bold text-slate-100"> Bildirishnomalar</h1>
 </div>
 <div class="card overflow-hidden">
-    {% if notifs.items %}
-    <div class="divide-y divide-slate-50">
-        {% for notif in notifs.items %}
-        <div class="flex items-start gap-4 px-6 py-4 {% if not notif.is_read %}bg-brand-50{% else %}hover:bg-slate-900/30{% endif %} transition">
-            <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white text-sm flex-shrink-0">рџ””</div>
-            <div class="flex-1">
-                <p class="text-sm font-semibold text-slate-100">{{ notif.title }}</p>
-                <p class="text-sm text-slate-300 mt-0.5">{{ notif.message }}</p>
-                <p class="text-xs muted mt-1">{{ notif.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
-            </div>
-        </div>
-        {% endfor %}
+  {% if notifs.items %}
+  <div class="divide-y divide-slate-50">
+    {% for notif in notifs.items %}
+    <div class="flex items-start gap-4 px-6 py-4 {% if not notif.is_read %}bg-brand-50{% else %}hover:bg-slate-900/30{% endif %} transition">
+      <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white text-sm flex-shrink-0"></div>
+      <div class="flex-1">
+        <p class="text-sm font-semibold text-slate-100">{{ notif.title }}</p>
+        <p class="text-sm text-slate-300 mt-0.5">{{ notif.message }}</p>
+        <p class="text-xs muted mt-1">{{ notif.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+      </div>
     </div>
-    {% if notifs.pages > 1 %}
-    <div class="px-6 py-4 border-t border-slate-700/60 flex justify-between">
-        <p class="text-sm muted">Sahifa {{ notifs.page }}/{{ notifs.pages }}</p>
-        <div class="flex gap-2">
-            {% if notifs.has_prev %}<a href="{{ url_for('student.notifications', page=notifs.prev_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-900/30">в†ђ</a>{% endif %}
-            {% if notifs.has_next %}<a href="{{ url_for('student.notifications', page=notifs.next_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-900/30">в†’</a>{% endif %}
-        </div>
+    {% endfor %}
+  </div>
+  {% if notifs.pages > 1 %}
+  <div class="px-6 py-4 border-t border-slate-700/60 flex justify-between">
+    <p class="text-sm muted">Sahifa {{ notifs.page }}/{{ notifs.pages }}</p>
+    <div class="flex gap-2">
+      {% if notifs.has_prev %}<a href="{{ url_for('student.notifications', page=notifs.prev_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-900/30">-></a>{% endif %}
+      {% if notifs.has_next %}<a href="{{ url_for('student.notifications', page=notifs.next_num) }}" class="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-900/30">-></a>{% endif %}
     </div>
-    {% endif %}
-    {% else %}
-    <div class="text-center py-16">
-        <span class="text-5xl block mb-3">рџ”•</span>
-        <p class="muted">Bildirishnomalar yo'q</p>
-    </div>
-    {% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="text-center py-16">
+    <span class="text-5xl block mb-3"></span>
+    <p class="muted">Bildirishnomalar yo'q</p>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
+
+
+
 
 

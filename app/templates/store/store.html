@@ -2,28 +2,31 @@
 {% block title %}Do'kon{% endblock %}
 {% block content %}
 <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
-  <div><h1 class="text-2xl font-semibold tracking-tight">Do'kon</h1><p class="text-sm muted">Balans: <span class="accent font-semibold">{{ current_user.coin_balance }} coin</span></p></div>
+ <div><h1 class="text-2xl font-semibold tracking-tight">Do'kon</h1><p class="text-sm muted">Balans: <span class="accent font-semibold">{{ current_user.coin_balance }} coin</span></p></div>
 </div>
 
 <div class="card p-4 mb-5">
-  <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
-    <input type="text" name="q" value="{{ search }}" placeholder="Mahsulot qidirish" class="md:col-span-2 px-3 py-2.5 text-sm">
-    <select name="category" class="px-3 py-2.5 text-sm"><option value="">Barcha kategoriyalar</option>{% for cat in categories %}<option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}</select>
-    <button class="btn-primary px-4 py-2.5 text-sm">Qidirish</button>
-  </form>
+ <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+  <input type="text" name="q" value="{{ search }}" placeholder="Mahsulot qidirish" class="md:col-span-2 px-3 py-2.5 text-sm">
+  <select name="category" class="px-3 py-2.5 text-sm"><option value="">Barcha kategoriyalar</option>{% for cat in categories %}<option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}</select>
+  <button class="btn-primary px-4 py-2.5 text-sm">Qidirish</button>
+ </form>
 </div>
 
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 {% for product in products.items %}
-  <a href="{{ url_for('store.product_detail', product_id=product.id) }}" class="card p-3 block hover:border-brand-500/60 transition">
-    <div class="h-28 rounded-lg bg-slate-800 mb-3 overflow-hidden">{% if product.image %}<img src="{{ url_for('static', filename=product.image) }}" class="w-full h-full object-cover">{% endif %}</div>
-    <p class="text-sm font-medium truncate">{{ product.title }}</p>
-    <p class="text-xs muted mt-1">{{ product.category.name if product.category else 'Kategoriyasiz' }}</p>
-    <p class="text-sm accent font-semibold mt-2">{{ product.price_coin }} coin</p>
-  </a>
+ <a href="{{ url_for('store.product_detail', product_id=product.id) }}" class="card p-3 block hover:border-brand-500/60 transition">
+  <div class="h-28 rounded-lg bg-slate-800 mb-3 overflow-hidden">{% if product.image %}<img src="{{ url_for('static', filename=product.image) }}" class="w-full h-full object-cover">{% endif %}</div>
+  <p class="text-sm font-medium truncate">{{ product.title }}</p>
+  <p class="text-xs muted mt-1">{{ product.category.name if product.category else 'Kategoriyasiz' }}</p>
+  <p class="text-sm accent font-semibold mt-2">{{ product.price_coin }} coin</p>
+ </a>
 {% else %}
-  <div class="col-span-full card p-8 text-center muted">Mahsulot topilmadi</div>
+ <div class="col-span-full card p-8 text-center muted">Mahsulot topilmadi</div>
 {% endfor %}
 </div>
 {% endblock %}
+
+
+
 

@@ -2,62 +2,65 @@
 {% block page_title %}Hisobotlar{% endblock %}
 {% block content %}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-    <div class="card p-5">
-        <p class="text-sm muted mb-1">Jami hisoblangan</p>
-        <p class="text-3xl font-extrabold text-emerald-600">{{ total_earned }} рџЄ™</p>
-    </div>
-    <div class="card p-5">
-        <p class="text-sm muted mb-1">Jami sarflangan</p>
-        <p class="text-3xl font-extrabold text-red-500">{{ total_spent }} рџЄ™</p>
-    </div>
+  <div class="card p-5">
+    <p class="text-sm muted mb-1">Jami hisoblangan</p>
+    <p class="text-3xl font-extrabold text-emerald-600">{{ total_earned }} coin</p>
+  </div>
+  <div class="card p-5">
+    <p class="text-sm muted mb-1">Jami sarflangan</p>
+    <p class="text-3xl font-extrabold text-red-500">{{ total_spent }} coin</p>
+  </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Top students -->
+  <!-- Top students -->
+  <div class="card p-5">
+    <h2 class="font-bold text-slate-100 mb-4">-> Balans bo'yicha Top-10</h2>
+    <div class="space-y-2">
+      {% for user, balance in top_by_balance %}
+      <div class="flex items-center gap-3 p-2 hover:bg-slate-900/30 rounded-xl">
+        <span class="text-sm font-bold muted w-6">{{ loop.index }}</span>
+        <div class="w-7 h-7 rounded-full gradient-brand flex items-center justify-center text-white text-xs font-bold">{{ user.first_name[0] }}</div>
+        <span class="flex-1 text-sm font-medium text-slate-100">{{ user.full_name }}</span>
+        <span class="font-bold text-coin-600 text-sm">{{ balance }} coin</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <!-- Orders by status -->
     <div class="card p-5">
-        <h2 class="font-bold text-slate-100 mb-4">рџЏ† Balans bo'yicha Top-10</h2>
-        <div class="space-y-2">
-            {% for user, balance in top_by_balance %}
-            <div class="flex items-center gap-3 p-2 hover:bg-slate-900/30 rounded-xl">
-                <span class="text-sm font-bold muted w-6">{{ loop.index }}</span>
-                <div class="w-7 h-7 rounded-full gradient-brand flex items-center justify-center text-white text-xs font-bold">{{ user.first_name[0] }}</div>
-                <span class="flex-1 text-sm font-medium text-slate-100">{{ user.full_name }}</span>
-                <span class="font-bold text-coin-600 text-sm">{{ balance }} рџЄ™</span>
-            </div>
-            {% endfor %}
+      <h2 class="font-bold text-slate-100 mb-4"> Buyurtmalar holati bo'yicha</h2>
+      <div class="space-y-2">
+        {% for status, count in orders_by_status %}
+        <div class="flex items-center justify-between p-2.5 bg-slate-900/30 rounded-xl">
+          <span class="text-sm font-medium text-slate-300 capitalize">
+            {% if status == 'new' %} Yangi{% elif status == 'confirmed' %} Tasdiqlangan{% elif status == 'delivered' %} Berilgan{% else %} Bekor qilingan{% endif %}
+          </span>
+          <span class="font-bold text-slate-100">{{ count }}</span>
         </div>
+        {% endfor %}
+      </div>
     </div>
 
-    <div class="space-y-6">
-        <!-- Orders by status -->
-        <div class="card p-5">
-            <h2 class="font-bold text-slate-100 mb-4">рџ“¦ Buyurtmalar holati bo'yicha</h2>
-            <div class="space-y-2">
-                {% for status, count in orders_by_status %}
-                <div class="flex items-center justify-between p-2.5 bg-slate-900/30 rounded-xl">
-                    <span class="text-sm font-medium text-slate-300 capitalize">
-                        {% if status == 'new' %}вЏі Yangi{% elif status == 'confirmed' %}вњ… Tasdiqlangan{% elif status == 'delivered' %}рџ“¦ Berilgan{% else %}вќЊ Bekor qilingan{% endif %}
-                    </span>
-                    <span class="font-bold text-slate-100">{{ count }}</span>
-                </div>
-                {% endfor %}
-            </div>
+    <!-- Top products -->
+    <div class="card p-5">
+      <h2 class="font-bold text-slate-100 mb-4"> Ommabop mahsulotlar</h2>
+      <div class="space-y-2">
+        {% for title, cnt in top_products %}
+        <div class="flex items-center justify-between p-2.5 bg-slate-900/30 rounded-xl">
+          <span class="text-sm text-slate-200 truncate mr-3">{{ title }}</span>
+          <span class="text-sm font-bold text-slate-300 whitespace-nowrap">{{ cnt }} buyurtma</span>
         </div>
-
-        <!-- Top products -->
-        <div class="card p-5">
-            <h2 class="font-bold text-slate-100 mb-4">рџ›ЌпёЏ Ommabop mahsulotlar</h2>
-            <div class="space-y-2">
-                {% for title, cnt in top_products %}
-                <div class="flex items-center justify-between p-2.5 bg-slate-900/30 rounded-xl">
-                    <span class="text-sm text-slate-200 truncate mr-3">{{ title }}</span>
-                    <span class="text-sm font-bold text-slate-300 whitespace-nowrap">{{ cnt }} buyurtma</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
+
+
+
 
 

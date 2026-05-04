@@ -3,14 +3,17 @@
 {% block content %}
 <div class="mb-5"><h1 class="text-2xl font-semibold tracking-tight">Buyurtmalarim</h1></div>
 <div class="card overflow-hidden">
-  {% for order in orders.items %}
-  <div class="px-5 py-4 border-t border-slate-700/50 flex items-center justify-between gap-3">
-    <div><p class="text-sm">{{ order.product.title }}</p><p class="text-xs muted">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p></div>
-    <div class="text-right"><p class="text-sm accent">{{ order.price_at_purchase }}</p><p class="text-xs muted">{{ order.status }}</p></div>
-  </div>
-  {% else %}
-  <div class="px-5 py-10 text-center"><p class="muted">Buyurtmalar yo'q</p><a href="{{ url_for('store.store') }}" class="btn-primary inline-block mt-3 px-4 py-2 text-sm">Do'konga o'tish</a></div>
-  {% endfor %}
+ {% for order in orders.items %}
+ <div class="px-5 py-4 border-t border-slate-700/50 flex items-center justify-between gap-3">
+  <div><p class="text-sm">{{ order.product.title }}</p><p class="text-xs muted">{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p></div>
+  <div class="text-right"><p class="text-sm accent">{{ order.price_at_purchase }}</p><p class="text-xs muted">{{ order.status }}</p></div>
+ </div>
+ {% else %}
+ <div class="px-5 py-10 text-center"><p class="muted">Buyurtmalar yo'q</p><a href="{{ url_for('store.store') }}" class="btn-primary inline-block mt-3 px-4 py-2 text-sm">Do'konga o'tish</a></div>
+ {% endfor %}
 </div>
 {% endblock %}
+
+
+
 

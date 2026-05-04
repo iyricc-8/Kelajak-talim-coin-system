@@ -2,29 +2,32 @@
 {% block title %}Ro'yxatdan o'tish{% endblock %}
 {% block body %}
 <div class="min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-lg">
-    <div class="text-center mb-6">
-      <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-20 h-20 mx-auto rounded-xl bg-white/90 p-1.5 object-contain">
-      <h1 class="mt-4 text-2xl font-semibold tracking-tight">Akkaunt yaratish</h1>
-      <p class="text-sm muted mt-1">Kelajak Ta'lim coin tizimi</p>
-    </div>
-
-    <div class="card p-6">
-      <form method="POST" class="space-y-4">
-        {{ form.hidden_tag() }}
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-sm muted mb-1">Ism</label>{{ form.first_name(class="w-full px-3 py-2.5 text-sm") }}</div>
-          <div><label class="block text-sm muted mb-1">Familiya</label>{{ form.last_name(class="w-full px-3 py-2.5 text-sm") }}</div>
-        </div>
-        <div><label class="block text-sm muted mb-1">Login</label>{{ form.username(class="w-full px-4 py-2.5 text-sm") }}</div>
-        <div><label class="block text-sm muted mb-1">Email</label>{{ form.email(class="w-full px-4 py-2.5 text-sm") }}</div>
-        <div><label class="block text-sm muted mb-1">Parol</label>{{ form.password(class="w-full px-4 py-2.5 text-sm") }}</div>
-        <div><label class="block text-sm muted mb-1">Parolni tasdiqlang</label>{{ form.confirm_password(class="w-full px-4 py-2.5 text-sm") }}</div>
-        <button type="submit" class="w-full btn-primary py-3">Ro'yxatdan o'tish</button>
-      </form>
-      <div class="mt-5 pt-5 border-t border-slate-700/60 text-center text-sm muted">Akkaunt bormi? <a href="{{ url_for('auth.login') }}" class="accent hover:underline">Kirish</a></div>
-    </div>
+ <div class="w-full max-w-lg">
+  <div class="text-center mb-6">
+   <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" class="w-20 h-20 mx-auto rounded-xl bg-white/90 p-1.5 object-contain">
+   <h1 class="mt-4 text-2xl font-semibold tracking-tight">Akkaunt yaratish</h1>
+   <p class="text-sm muted mt-1">Kelajak Ta'lim coin tizimi</p>
   </div>
+
+  <div class="card p-6">
+   <form method="POST" class="space-y-4">
+    {{ form.hidden_tag() }}
+    <div class="grid grid-cols-2 gap-3">
+     <div><label class="block text-sm muted mb-1">Ism</label>{{ form.first_name(class="w-full px-3 py-2.5 text-sm") }}</div>
+     <div><label class="block text-sm muted mb-1">Familiya</label>{{ form.last_name(class="w-full px-3 py-2.5 text-sm") }}</div>
+    </div>
+    <div><label class="block text-sm muted mb-1">Login</label>{{ form.username(class="w-full px-4 py-2.5 text-sm") }}</div>
+    <div><label class="block text-sm muted mb-1">Email</label>{{ form.email(class="w-full px-4 py-2.5 text-sm") }}</div>
+    <div><label class="block text-sm muted mb-1">Parol</label>{{ form.password(class="w-full px-4 py-2.5 text-sm") }}</div>
+    <div><label class="block text-sm muted mb-1">Parolni tasdiqlang</label>{{ form.confirm_password(class="w-full px-4 py-2.5 text-sm") }}</div>
+    <button type="submit" class="w-full btn-primary py-3">Ro'yxatdan o'tish</button>
+   </form>
+   <div class="mt-5 pt-5 border-t border-slate-700/60 text-center text-sm muted">Akkaunt bormi? <a href="{{ url_for('auth.login') }}" class="accent hover:underline">Kirish</a></div>
+  </div>
+ </div>
 </div>
 {% endblock %}
+
+
+
 

@@ -3,30 +3,33 @@
 {% block content %}
 <div class="mb-5"><h1 class="text-2xl font-semibold tracking-tight">Mening profilim</h1></div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <section class="card p-5">
-    <div class="text-center">
-      {% if current_user.avatar_url %}<img src="{{ url_for('static', filename=current_user.avatar_url) }}" class="w-20 h-20 rounded-xl object-cover mx-auto">{% else %}<div class="w-20 h-20 rounded-xl bg-brand-700 flex items-center justify-center text-2xl font-semibold mx-auto">{{ current_user.first_name[0] }}</div>{% endif %}
-      <p class="mt-3 font-semibold">{{ current_user.full_name }}</p>
-      <p class="text-sm muted">@{{ current_user.username }}</p>
-    </div>
-    <div class="mt-4 space-y-2 text-sm">
-      <div class="card p-3"><p class="text-xs muted">Email</p><p>{{ current_user.email }}</p></div>
-      <div class="card p-3"><p class="text-xs muted">Ro'yxatdan o'tgan</p><p>{{ current_user.created_at.strftime('%d.%m.%Y') }}</p></div>
-      <div class="card p-3"><p class="text-xs muted">Balans</p><p class="accent font-semibold">{{ current_user.coin_balance }} coin</p></div>
-    </div>
-  </section>
-  <section class="lg:col-span-2 card p-5">
-    <h2 class="font-semibold mb-4">Profilni tahrirlash</h2>
-    <form method="POST" enctype="multipart/form-data" class="space-y-4">
-      {{ form.hidden_tag() }}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div><label class="text-xs muted">Ism</label>{{ form.first_name(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
-        <div><label class="text-xs muted">Familiya</label>{{ form.last_name(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
-      </div>
-      <div><label class="text-xs muted">Avatar</label>{{ form.avatar(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
-      <button class="btn-primary px-5 py-2.5 text-sm" type="submit">Saqlash</button>
-    </form>
-  </section>
+ <section class="card p-5">
+  <div class="text-center">
+   {% if current_user.avatar_url %}<img src="{{ url_for('static', filename=current_user.avatar_url) }}" class="w-20 h-20 rounded-xl object-cover mx-auto">{% else %}<div class="w-20 h-20 rounded-xl bg-brand-700 flex items-center justify-center text-2xl font-semibold mx-auto">{{ current_user.first_name[0] }}</div>{% endif %}
+   <p class="mt-3 font-semibold">{{ current_user.full_name }}</p>
+   <p class="text-sm muted">@{{ current_user.username }}</p>
+  </div>
+  <div class="mt-4 space-y-2 text-sm">
+   <div class="card p-3"><p class="text-xs muted">Email</p><p>{{ current_user.email }}</p></div>
+   <div class="card p-3"><p class="text-xs muted">Ro'yxatdan o'tgan</p><p>{{ current_user.created_at.strftime('%d.%m.%Y') }}</p></div>
+   <div class="card p-3"><p class="text-xs muted">Balans</p><p class="accent font-semibold">{{ current_user.coin_balance }} coin</p></div>
+  </div>
+ </section>
+ <section class="lg:col-span-2 card p-5">
+  <h2 class="font-semibold mb-4">Profilni tahrirlash</h2>
+  <form method="POST" enctype="multipart/form-data" class="space-y-4">
+   {{ form.hidden_tag() }}
+   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div><label class="text-xs muted">Ism</label>{{ form.first_name(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
+    <div><label class="text-xs muted">Familiya</label>{{ form.last_name(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
+   </div>
+   <div><label class="text-xs muted">Avatar</label>{{ form.avatar(class="w-full mt-1 px-3 py-2.5 text-sm") }}</div>
+   <button class="btn-primary px-5 py-2.5 text-sm" type="submit">Saqlash</button>
+  </form>
+ </section>
 </div>
 {% endblock %}
+
+
+
 

@@ -2,50 +2,53 @@
 {% block title %}Bosh sahifa{% endblock %}
 {% block content %}
 <div class="mb-5">
-  <h1 class="text-2xl font-semibold tracking-tight">Xush kelibsiz, {{ current_user.first_name }}</h1>
-  <p class="text-sm muted mt-1">Shaxsiy ko'rsatkichlar</p>
+ <h1 class="text-2xl font-semibold tracking-tight">Xush kelibsiz, {{ current_user.first_name }}</h1>
+ <p class="text-sm muted mt-1">Shaxsiy ko'rsatkichlar</p>
 </div>
 
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <div class="card p-4"><p class="text-xs muted">Balans</p><p class="text-3xl font-semibold accent mt-2">{{ current_user.coin_balance }}</p></div>
-  <div class="card p-4"><p class="text-xs muted">Level</p><p class="text-3xl font-semibold mt-2">{{ current_user.level or 1 }}</p></div>
-  <div class="card p-4"><p class="text-xs muted">XP</p><p class="text-3xl font-semibold mt-2">{{ current_xp }}</p></div>
-  <div class="card p-4"><p class="text-xs muted">Yutuqlar</p><p class="text-3xl font-semibold mt-2">{{ user_achievements|length }}</p></div>
+ <div class="card p-4"><p class="text-xs muted">Balans</p><p class="text-3xl font-semibold accent mt-2">{{ current_user.coin_balance }}</p></div>
+ <div class="card p-4"><p class="text-xs muted">Level</p><p class="text-3xl font-semibold mt-2">{{ current_user.level or 1 }}</p></div>
+ <div class="card p-4"><p class="text-xs muted">XP</p><p class="text-3xl font-semibold mt-2">{{ current_xp }}</p></div>
+ <div class="card p-4"><p class="text-xs muted">Yutuqlar</p><p class="text-3xl font-semibold mt-2">{{ user_achievements|length }}</p></div>
 </div>
 
 <div class="card p-4 mb-6">
-  <div class="flex justify-between text-xs muted mb-2"><span>Progress</span><span>{{ progress_pct }}%</span></div>
-  <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden"><div class="h-full" style="width: {{ progress_pct }}%; background: linear-gradient(90deg,#335e97,#d4a92a);"></div></div>
+ <div class="flex justify-between text-xs muted mb-2"><span>Progress</span><span>{{ progress_pct }}%</span></div>
+ <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden"><div class="h-full" style="width: {{ progress_pct }}%; background: linear-gradient(90deg,#335e97,#d4a92a);"></div></div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <section class="lg:col-span-2 card overflow-hidden">
-    <div class="px-5 py-4 border-b border-slate-700/60 flex items-center justify-between"><h2 class="font-semibold">So'nggi operatsiyalar</h2><a class="text-sm accent" href="{{ url_for('transactions.transactions') }}">Barchasi</a></div>
-    <div>
-      {% for txn in recent_txns %}
-      <div class="px-5 py-3 border-t border-slate-700/50 flex items-center justify-between gap-3">
-        <div><p class="text-sm">{{ txn.reason }}</p><p class="text-xs muted">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p></div>
-        <span class="text-sm {% if txn.type == 'earn' %}text-emerald-300{% else %}text-red-300{% endif %}">{{ txn.amount }}</span>
-      </div>
-      {% else %}
-      <p class="px-5 py-8 text-sm muted">Operatsiyalar yo'q</p>
-      {% endfor %}
-    </div>
-  </section>
+ <section class="lg:col-span-2 card overflow-hidden">
+  <div class="px-5 py-4 border-b border-slate-700/60 flex items-center justify-between"><h2 class="font-semibold">So'nggi operatsiyalar</h2><a class="text-sm accent" href="{{ url_for('transactions.transactions') }}">Barchasi</a></div>
+  <div>
+   {% for txn in recent_txns %}
+   <div class="px-5 py-3 border-t border-slate-700/50 flex items-center justify-between gap-3">
+    <div><p class="text-sm">{{ txn.reason }}</p><p class="text-xs muted">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p></div>
+    <span class="text-sm {% if txn.type == 'earn' %}text-emerald-300{% else %}text-red-300{% endif %}">{{ txn.amount }}</span>
+   </div>
+   {% else %}
+   <p class="px-5 py-8 text-sm muted">Operatsiyalar yo'q</p>
+   {% endfor %}
+  </div>
+ </section>
 
-  <section class="card p-4">
-    <h2 class="font-semibold mb-3">Kvestlar</h2>
-    <div class="space-y-2">
-      {% for item in user_quests %}
-      <div class="border border-slate-700/60 rounded-lg p-3">
-        <p class="text-sm">{{ item.quest.title }}</p>
-        <p class="text-xs muted mt-1">{{ item.quest.description }}</p>
-      </div>
-      {% else %}
-      <p class="text-sm muted">Kvestlar yo'q</p>
-      {% endfor %}
-    </div>
-  </section>
+ <section class="card p-4">
+  <h2 class="font-semibold mb-3">Kvestlar</h2>
+  <div class="space-y-2">
+   {% for item in user_quests %}
+   <div class="border border-slate-700/60 rounded-lg p-3">
+    <p class="text-sm">{{ item.quest.title }}</p>
+    <p class="text-xs muted mt-1">{{ item.quest.description }}</p>
+   </div>
+   {% else %}
+   <p class="text-sm muted">Kvestlar yo'q</p>
+   {% endfor %}
+  </div>
+ </section>
 </div>
 {% endblock %}
+
+
+
 
