@@ -8,10 +8,10 @@
 
 <!-- Filter -->
 <div class="card p-4 mb-6 flex flex-wrap gap-2">
-  <a href="{{ url_for('transactions.transactions') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if not txn_type %}bg-brand-600 text-white{% else %}bg-slate-100 text-slate-300 hover:bg-slate-200{% endif %}">Barchasi</a>
-  <a href="{{ url_for('transactions.transactions', type='earn') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'earn' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-slate-300 hover:bg-slate-200{% endif %}"> Hisoblash</a>
-  <a href="{{ url_for('transactions.transactions', type='spend') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'spend' %}bg-red-500 text-white{% else %}bg-slate-100 text-slate-300 hover:bg-slate-200{% endif %}"> Hisobdan yechish</a>
-  <a href="{{ url_for('transactions.transactions', type='adjustment') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'adjustment' %}bg-slate-600 text-white{% else %}bg-slate-100 text-slate-300 hover:bg-slate-200{% endif %}">coin Tuzatishlar</a>
+  <a href="{{ url_for('transactions.transactions') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if not txn_type %}bg-brand-600 text-white{% else %}btn-ghost muted{% endif %}">Barchasi</a>
+  <a href="{{ url_for('transactions.transactions', type='earn') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'earn' %}bg-emerald-600 text-white{% else %}btn-ghost muted{% endif %}">Hisoblash</a>
+  <a href="{{ url_for('transactions.transactions', type='spend') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'spend' %}bg-red-500 text-white{% else %}btn-ghost muted{% endif %}">Hisobdan yechish</a>
+  <a href="{{ url_for('transactions.transactions', type='adjustment') }}" class="px-4 py-2 rounded-xl text-sm font-medium transition {% if txn_type == 'adjustment' %}bg-slate-600 text-white{% else %}btn-ghost muted{% endif %}">Tuzatishlar</a>
 </div>
 
 <!-- Transactions Table -->
