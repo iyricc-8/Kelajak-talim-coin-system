@@ -1,8 +1,8 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 {% block page_title %}Do'kon boshqaruvi{% endblock %}
 {% block content %}
 <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
-  <div><h2 class="font-semibold">Mahsulotlar</h2><p class="text-xs muted">Jami {{ stats.total }} � Faol {{ stats.active }}</p></div>
+  <div><h2 class="font-semibold">Mahsulotlar</h2><p class="text-xs muted">Jami {{ stats.total }} · Faol {{ stats.active }}</p></div>
   <div class="flex gap-2"><a href="{{ url_for('admin.categories') }}" class="btn-ghost px-4 py-2 text-sm">Kategoriyalar</a><a href="{{ url_for('admin.create_product') }}" class="btn-primary px-4 py-2 text-sm">Yangi mahsulot</a></div>
 </div>
 
@@ -36,3 +36,4 @@
   </div>
 </div>
 {% endblock %}
+

@@ -1,4 +1,4 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 
 {% block page_title %}{{ title }}{% endblock %}
 
@@ -33,14 +33,14 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-200 mb-1">{{ form.reward_coins.label }}</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-amber-500">🪙</span>
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-amber-500">рџЄ™</span>
                         {{ form.reward_coins(class="w-full pl-8 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500") }}
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-200 mb-1">{{ form.reward_xp.label }}</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-indigo-500">⭐</span>
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-indigo-500">в­ђ</span>
                         {{ form.reward_xp(class="w-full pl-8 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500") }}
                     </div>
                 </div>
@@ -64,4 +64,5 @@
     </div>
 </div>
 {% endblock %}
+
 

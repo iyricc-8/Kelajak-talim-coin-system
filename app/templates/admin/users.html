@@ -1,4 +1,4 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 {% block page_title %}Foydalanuvchilar{% endblock %}
 {% block content %}
 <div class="flex items-center justify-between mb-4">
@@ -26,7 +26,7 @@
       <tbody>
       {% for user in users.items %}
         <tr class="border-t border-slate-700/50">
-          <td class="px-5 py-3"><p class="text-sm">{{ user.full_name }}</p><p class="text-xs muted">@{{ user.username }} � {{ user.email }}</p></td>
+          <td class="px-5 py-3"><p class="text-sm">{{ user.full_name }}</p><p class="text-xs muted">@{{ user.username }} · {{ user.email }}</p></td>
           <td class="px-5 py-3 text-xs">{{ user.role }}</td>
           <td class="px-5 py-3 text-sm accent">{{ user.coin_balance }}</td>
           <td class="px-5 py-3 text-xs">{{ 'Faol' if user.is_active else 'Bloklangan' }}</td>
@@ -39,3 +39,4 @@
   </div>
 </div>
 {% endblock %}
+

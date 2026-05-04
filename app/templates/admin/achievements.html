@@ -1,4 +1,4 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 {% block page_title %}Yutuqlar{% endblock %}
 {% block content %}
 <div class="flex justify-between items-center mb-6">
@@ -18,7 +18,7 @@
         <h3 class="font-bold text-slate-100 mb-1">{{ ach.title }}</h3>
         <p class="text-xs muted mb-3">{{ ach.description }}</p>
         <div class="text-xs muted mb-3">
-            Shart: <span class="font-medium text-slate-300">{{ ach.condition_type }} ≥ {{ ach.condition_value }}</span>
+            Shart: <span class="font-medium text-slate-300">{{ ach.condition_type }} в‰Ґ {{ ach.condition_value }}</span>
         </div>
         <div class="text-xs muted mb-3">Olingan: {{ ach.user_achievements.count() }} o'quvchi</div>
         <div class="flex flex-wrap gap-2">
@@ -38,4 +38,5 @@
     {% endfor %}
 </div>
 {% endblock %}
+
 

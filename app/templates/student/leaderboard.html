@@ -1,8 +1,8 @@
-{% extends "student/layout.html" %}
+﻿{% extends "student/layout.html" %}
 {% block title %}Reyting{% endblock %}
 {% block content %}
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-slate-100">⭐ O'quvchilar reytingi</h1>
+    <h1 class="text-2xl font-bold text-slate-100">в­ђ O'quvchilar reytingi</h1>
     <p class="muted text-sm mt-1">XP bo'yicha top o'quvchilar</p>
 </div>
 
@@ -17,7 +17,7 @@
             <div class="w-12 h-12 rounded-full gradient-brand flex items-center justify-center text-white font-bold mx-auto border-4 border-slate-300 shadow mb-2">
                 {% if u2.avatar_url %}<img src="{{ url_for('static', filename=u2.avatar_url) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u2.first_name[0] }}{% endif %}
             </div>
-            <span class="text-2xl">🥈</span>
+            <span class="text-2xl">рџҐ€</span>
             <p class="text-sm font-bold text-slate-100 truncate">{{ u2.first_name }}</p>
             <p class="text-xs font-semibold text-coin-600">{{ b2 }} XP</p>
         </div>
@@ -27,7 +27,7 @@
             <div class="w-16 h-16 rounded-full gradient-coin flex items-center justify-center text-white font-bold mx-auto border-4 border-coin-300 shadow-lg mb-2">
                 {% if u1.avatar_url %}<img src="{{ url_for('static', filename=u1.avatar_url) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u1.first_name[0] }}{% endif %}
             </div>
-            <span class="text-3xl">🥇</span>
+            <span class="text-3xl">рџҐ‡</span>
             <p class="text-sm font-bold text-slate-100 truncate">{{ u1.first_name }}</p>
             <p class="text-xs font-semibold text-coin-600">{{ b1 }} XP</p>
         </div>
@@ -37,7 +37,7 @@
             <div class="w-11 h-11 rounded-full bg-amber-700 flex items-center justify-center text-white font-bold mx-auto border-4 border-amber-200 shadow mb-2">
                 {% if u3.avatar_url %}<img src="{{ url_for('static', filename=u3.avatar_url) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ u3.first_name[0] }}{% endif %}
             </div>
-            <span class="text-2xl">🥉</span>
+            <span class="text-2xl">рџҐ‰</span>
             <p class="text-sm font-bold text-slate-100 truncate">{{ u3.first_name }}</p>
             <p class="text-xs font-semibold text-coin-600">{{ b3 }} XP</p>
         </div>
@@ -53,7 +53,7 @@
                 {% elif loop.index == 2 %}text-slate-300 text-base
                 {% elif loop.index == 3 %}text-amber-700 text-base
                 {% else %}muted text-sm{% endif %}">
-                {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                {% if loop.index == 1 %}рџҐ‡{% elif loop.index == 2 %}рџҐ€{% elif loop.index == 3 %}рџҐ‰{% else %}{{ loop.index }}{% endif %}
             </span>
             <div class="w-9 h-9 rounded-full gradient-brand flex items-center justify-center text-white text-sm font-bold border-2 {% if user.id == current_user.id %}border-brand-400{% else %}border-slate-200{% endif %}">
                 {% if user.avatar_url %}<img src="{{ url_for('static', filename=user.avatar_url) }}" class="w-full h-full object-cover rounded-full">{% else %}{{ user.first_name[0] }}{% endif %}
@@ -68,10 +68,11 @@
     </div>
     {% else %}
     <div class="text-center py-16">
-        <span class="text-5xl block mb-3">📭</span>
+        <span class="text-5xl block mb-3">рџ“­</span>
         <p class="muted">Reyting hozircha bo'sh</p>
     </div>
     {% endif %}
 </div>
 {% endblock %}
+
 

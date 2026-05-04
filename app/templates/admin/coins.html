@@ -1,10 +1,10 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 {% block page_title %}Coin hisoblash / yechish{% endblock %}
 {% block content %}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Award -->
     <div class="card p-6">
-        <h2 class="font-bold text-slate-100 mb-5">💚 Coin hisoblash</h2>
+        <h2 class="font-bold text-slate-100 mb-5">рџ’љ Coin hisoblash</h2>
         <form method="POST" class="space-y-4">
             {{ award_form.hidden_tag() }}
             <input type="hidden" name="action" value="award">
@@ -24,13 +24,13 @@
                 <label class="block text-sm font-medium text-slate-200 mb-1">Izoh (ixtiyoriy)</label>
                 {{ award_form.comment(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-900/30 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none", rows=2) }}
             </div>
-            <button type="submit" class="w-full py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition">💚 Coin hisoblash</button>
+            <button type="submit" class="w-full py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition">рџ’љ Coin hisoblash</button>
         </form>
     </div>
 
     <!-- Deduct -->
     <div class="card p-6">
-        <h2 class="font-bold text-slate-100 mb-5">🔴 Coin yechish</h2>
+        <h2 class="font-bold text-slate-100 mb-5">рџ”ґ Coin yechish</h2>
         <form method="POST" class="space-y-4">
             {{ deduct_form.hidden_tag() }}
             <input type="hidden" name="action" value="deduct">
@@ -50,14 +50,14 @@
                 <label class="block text-sm font-medium text-slate-200 mb-1">Izoh (ixtiyoriy)</label>
                 {{ deduct_form.comment(class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-900/30 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 resize-none", rows=2) }}
             </div>
-            <button type="submit" class="w-full py-3 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition">🔴 Coin yechish</button>
+            <button type="submit" class="w-full py-3 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition">рџ”ґ Coin yechish</button>
         </form>
     </div>
 </div>
 
 <!-- Quick reasons -->
 <div class="mt-6 card p-5">
-    <h3 class="font-bold text-slate-100 mb-3">💡 Tezkor hisoblash sabablari</h3>
+    <h3 class="font-bold text-slate-100 mb-3">рџ’Ў Tezkor hisoblash sabablari</h3>
     <div class="flex flex-wrap gap-2">
         {% for reason in ["Darsga qatnashish", "Uy vazifasini bajarish", "Haftaning eng yaxshi natijasi", "Tanlovdagi g'alaba", "Darsdagi faollik", "O'qituvchidan bonus"] %}
         <button onclick="document.querySelector('[name=reason]').value='{{ reason }}'" type="button"
@@ -66,4 +66,5 @@
     </div>
 </div>
 {% endblock %}
+
 

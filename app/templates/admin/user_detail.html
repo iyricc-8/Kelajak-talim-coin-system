@@ -1,8 +1,8 @@
-{% extends "admin/layout.html" %}
+﻿{% extends "admin/layout.html" %}
 {% block page_title %}Profil: {{ user.full_name }}{% endblock %}
 {% block content %}
 <div class="mb-4">
-    <a href="{{ url_for('admin.users') }}" class="text-brand-600 text-sm hover:underline">← Foydalanuvchilarga qaytish</a>
+    <a href="{{ url_for('admin.users') }}" class="text-brand-600 text-sm hover:underline">в†ђ Foydalanuvchilarga qaytish</a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -15,7 +15,7 @@
         </div>
         <div class="p-3 gradient-coin rounded-xl text-white text-center mb-4">
             <p class="text-xs opacity-80">Balans</p>
-            <p class="text-2xl font-extrabold">{{ user.coin_balance }} 🪙</p>
+            <p class="text-2xl font-extrabold">{{ user.coin_balance }} рџЄ™</p>
         </div>
 
         <!-- Edit form -->
@@ -72,14 +72,14 @@
     <div class="lg:col-span-2 space-y-6">
         <!-- Award/Deduct -->
         <div class="card p-5">
-            <h3 class="font-bold text-slate-100 mb-4">💰 Coin boshqaruvi</h3>
+            <h3 class="font-bold text-slate-100 mb-4">рџ’° Coin boshqaruvi</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Award -->
                 <form method="POST" action="{{ url_for('admin.coins') }}" class="space-y-2 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
                     <input type="hidden" name="action" value="award">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <p class="text-sm font-semibold text-emerald-700">💚 Coin hisoblash</p>
+                    <p class="text-sm font-semibold text-emerald-700">рџ’љ Coin hisoblash</p>
                     <input type="number" name="amount" placeholder="Miqdor" min="1" max="10000" required class="w-full px-3 py-2 rounded-lg border border-emerald-200 text-sm bg-white">
                     <input type="text" name="reason" placeholder="Sabab" required class="w-full px-3 py-2 rounded-lg border border-emerald-200 text-sm bg-white">
                     <button type="submit" class="w-full py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700">Hisoblash</button>
@@ -89,7 +89,7 @@
                     <input type="hidden" name="action" value="deduct">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <p class="text-sm font-semibold text-red-600">🔴 Coin yechish</p>
+                    <p class="text-sm font-semibold text-red-600">рџ”ґ Coin yechish</p>
                     <input type="number" name="amount" placeholder="Miqdor" min="1" max="10000" required class="w-full px-3 py-2 rounded-lg border border-red-200 text-sm bg-white">
                     <input type="text" name="reason" placeholder="Sabab" required class="w-full px-3 py-2 rounded-lg border border-red-200 text-sm bg-white">
                     <button type="submit" class="w-full py-2 bg-red-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600">Yechish</button>
@@ -117,13 +117,13 @@
             <div class="divide-y divide-slate-50">
                 {% for txn in recent_txns %}
                 <div class="flex items-center gap-3 px-5 py-3">
-                    <span class="text-lg">{% if txn.type == 'earn' %}💚{% elif txn.type == 'spend' %}🔴{% else %}⚙️{% endif %}</span>
+                    <span class="text-lg">{% if txn.type == 'earn' %}рџ’љ{% elif txn.type == 'spend' %}рџ”ґ{% else %}вљ™пёЏ{% endif %}</span>
                     <div class="flex-1">
                         <p class="text-sm text-slate-100">{{ txn.reason }}</p>
                         <p class="text-xs muted">{{ txn.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
                     </div>
                     <span class="font-bold text-sm {% if txn.type == 'earn' %}text-emerald-600{% else %}text-red-500{% endif %}">
-                        {% if txn.type == 'earn' %}+{% else %}−{% endif %}{{ txn.amount }} 🪙
+                        {% if txn.type == 'earn' %}+{% else %}в€’{% endif %}{{ txn.amount }} рџЄ™
                     </span>
                 </div>
                 {% endfor %}
@@ -132,4 +132,5 @@
     </div>
 </div>
 {% endblock %}
+
 
