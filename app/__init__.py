@@ -1,4 +1,4 @@
-from flask import Flask
+﻿from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -78,7 +78,7 @@ def create_app(config_class=None):
 
 
 def _seed_initial_data():
-    from app.models import User, Wallet, Category, Product, Achievement
+    from app.models import User, Wallet
     from werkzeug.security import generate_password_hash
 
     admin_username_env = os.environ.get('ADMIN_USERNAME')
@@ -86,10 +86,9 @@ def _seed_initial_data():
     admin_password = os.environ.get('ADMIN_PASSWORD')
     admin_username = admin_username_env or 'admin'
 
-    # Create or update admin
+    # Create or update admin only. No demo products/categories/achievements.
     admin_user = User.query.filter_by(role='admin').first()
-    is_new_install = admin_user is None
-    
+
     if not admin_user:
         if admin_email and admin_password:
             admin = User(
@@ -103,12 +102,10 @@ def _seed_initial_data():
             )
             db.session.add(admin)
             db.session.flush()
-            wallet = Wallet(user_id=admin.id, balance=0)
-            db.session.add(wallet)
+            db.session.add(Wallet(user_id=admin.id, balance=0))
         else:
-            print("Admin user not created. Set ADMIN_EMAIL and ADMIN_PASSWORD environment variables.")
+            print('Admin user not created. Set ADMIN_EMAIL and ADMIN_PASSWORD environment variables.')
     else:
-        # Keep admin account aligned with required credentials
         if admin_username_env:
             admin_user.username = admin_username_env
         if admin_email:
@@ -121,85 +118,6 @@ def _seed_initial_data():
             admin_user.last_name = 'Tizim'
         if not admin_user.wallet:
             db.session.add(Wallet(user_id=admin_user.id, balance=0))
-
-    if is_new_install:
-        # Seed categories
-        if Category.query.count() == 0:
-            cats = [
-                Category(name="Jismoniy sovg'alar", description="Haqiqiy sovg'alar va mukofotlar"),
-                Category(name='Raqamli bonuslar', description="Onlayn bonuslar va imtiyozlar"),
-                Category(name='Sertifikatlar', description="Sertifikatlar va diplomlar"),
-                Category(name='Imtiyozlar', description="Maxsus huquqlar va kirishlar"),
-            ]
-            for c in cats:
-                db.session.add(c)
-            db.session.flush()
-
-            # Seed products
-            cat1 = Category.query.filter_by(name="Jismoniy sovg'alar").first()
-            cat2 = Category.query.filter_by(name='Raqamli bonuslar').first()
-            products = [
-                Product(title='Logotipli bloknot', description="Maktabning brendli bloknoti", price_coin=150, stock=20, category_id=cat1.id if cat1 else 1, is_active=True),
-                Product(title='Ruchka-brelok', description="Brelokli zamonaviy ruchka", price_coin=80, stock=50, category_id=cat1.id if cat1 else 1, is_active=True),
-                Product(title="Qo'shimcha vaqt", description="Test uchun 15 daqiqa qo'shimcha vaqt", price_coin=200, stock=999, category_id=cat2.id if cat2 else 2, is_active=True),
-                Product(title="Bitta uy vazifasini o'tkazib yuborish", description="Bitta uy vazifasini topshirmaslik imkoniyati", price_coin=300, stock=999, category_id=cat2.id if cat2 else 2, is_active=True),
-                Product(title='Krujka', description="Maktabning brendli krujkasi", price_coin=500, stock=10, category_id=cat1.id if cat1 else 1, is_active=True),
-            ]
-            for p in products:
-                db.session.add(p)
-
-        # Seed achievements
-        if Achievement.query.count() == 0:
-            achievements = [
-                Achievement(title='Birinchi Coin!', description='Birinchi Coinni oling', icon='🎉', condition_type='total_earned', condition_value=1, is_active=True),
-                Achievement(title="Jamg'arma 100", description='100 Coin jamlang', icon='💰', condition_type='total_earned', condition_value=100, is_active=True),
-                Achievement(title="Jamg'arma 500", description='500 Coin jamlang', icon='🏆', condition_type='total_earned', condition_value=500, is_active=True),
-                Achievement(title='Birinchi xarid', description="Do'konda birinchi xaridingizni qiling", icon='🛍️', condition_type='purchases', condition_value=1, is_active=True),
-                Achievement(title='Xaridchi', description='5 ta xarid qiling', icon='🛒', condition_type='purchases', condition_value=5, is_active=True),
-                Achievement(title='Hafta Top-1', description="Reytingda 1-o'rinni egallang", icon='⭐', condition_type='leaderboard_top1', condition_value=1, is_active=True),
-            ]
-            for a in achievements:
-                db.session.add(a)
-
-    # Update default seed data to Uzbek (for existing DBs)
-    category_updates = {
-        'Физические подарки': ("Jismoniy sovg'alar", "Haqiqiy sovg'alar va mukofotlar"),
-        'Цифровые бонусы': ('Raqamli bonuslar', "Onlayn bonuslar va imtiyozlar"),
-        'Сертификаты': ('Sertifikatlar', "Sertifikatlar va diplomlar"),
-        'Привилегии': ('Imtiyozlar', "Maxsus huquqlar va kirishlar"),
-    }
-    for old_name, (new_name, new_desc) in category_updates.items():
-        cat = Category.query.filter_by(name=old_name).first()
-        if cat:
-            cat.name = new_name
-            cat.description = new_desc
-
-    product_updates = {
-        'Блокнот с логотипом': ('Logotipli bloknot', "Maktabning brendli bloknoti"),
-        'Ручка-брелок': ('Ruchka-brelok', "Brelokli zamonaviy ruchka"),
-        'Дополнительное время': ("Qo'shimcha vaqt", "Test uchun 15 daqiqa qo'shimcha vaqt"),
-        'Пропуск одного ДЗ': ("Bitta uy vazifasini o'tkazib yuborish", "Bitta uy vazifasini topshirmaslik imkoniyati"),
-        'Кружка': ('Krujka', "Maktabning brendli krujkasi"),
-    }
-    for old_title, (new_title, new_desc) in product_updates.items():
-        product = Product.query.filter_by(title=old_title).first()
-        if product:
-            product.title = new_title
-            product.description = new_desc
-
-    achievement_updates = {
-        'Первый Coin!': ('Birinchi Coin!', 'Birinchi Coinni oling'),
-        'Копилка 100': ("Jamg'arma 100", '100 Coin jamlang'),
-        'Копилка 500': ("Jamg'arma 500", '500 Coin jamlang'),
-        'Первая покупка': ('Birinchi xarid', "Do'konda birinchi xaridingizni qiling"),
-        'Шопоголик': ('Xaridchi', '5 ta xarid qiling'),
-        'Топ недели': ('Hafta Top-1', "Reytingda 1-o'rinni egallang"),
-    }
-    for old_title, (new_title, new_desc) in achievement_updates.items():
-        ach = Achievement.query.filter_by(title=old_title).first()
-        if ach:
-            ach.title = new_title
-            ach.description = new_desc
 
     db.session.commit()
 
@@ -239,3 +157,4 @@ def _ensure_user_economy_columns():
     User.query.filter(User.xp.is_(None)).update({'xp': 0})
     User.query.filter(User.level.is_(None)).update({'level': 1})
     db.session.commit()
+
