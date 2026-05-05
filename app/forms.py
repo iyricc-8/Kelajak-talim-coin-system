@@ -64,17 +64,6 @@ class DeductCoinsForm(FlaskForm):
     submit = SubmitField('Hisobdan yechish')
 
 
-class QuestForm(FlaskForm):
-    title = StringField('Kvest Nomi', validators=[DataRequired(), Length(max=256)])
-    description = TextAreaField('Tavsif', validators=[Optional()])
-    reward_coins = IntegerField('Mukofot (Coin)', validators=[Optional(), NumberRange(min=0)])
-    reward_xp = IntegerField('Mukofot (XP)', validators=[Optional(), NumberRange(min=0)])
-    quest_type = SelectField('Kvest Turi', choices=[('daily', 'Kunlik (Daily)'), ('weekly', 'Haftalik (Weekly)')])
-    is_active = BooleanField('Faol', default=True)
-    submit = SubmitField('Saqlash')
-
-
-
 class ProductForm(FlaskForm):
     title = StringField('Nomi', validators=[DataRequired(), Length(max=256)])
     description = TextAreaField('Tavsif', validators=[Optional()])

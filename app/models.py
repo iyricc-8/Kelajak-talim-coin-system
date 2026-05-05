@@ -30,7 +30,6 @@ class User(UserMixin, db.Model):
     transactions = db.relationship('Transaction', foreign_keys='Transaction.user_id', backref='user', lazy='dynamic')
     orders = db.relationship('Order', backref='user', lazy='dynamic')
     achievements = db.relationship('UserAchievement', backref='user', lazy='dynamic')
-    quests = db.relationship('UserQuest', backref='user', lazy='dynamic')
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
 
     def set_password(self, password):
@@ -223,37 +222,6 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f'<Notification user={self.user_id} read={self.is_read}>'
-
-
-class Quest(db.Model):
-    __tablename__ = 'quests'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(256), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    reward_coins = db.Column(db.Integer, default=0)
-    reward_xp = db.Column(db.Integer, default=0)
-    quest_type = db.Column(db.String(20), default='daily')  # daily, weekly
-    is_active = db.Column(db.Boolean, default=True)
-
-    user_quests = db.relationship('UserQuest', backref='quest', lazy='dynamic')
-
-    def __repr__(self):
-        return f'<Quest {self.title}>'
-
-
-class UserQuest(db.Model):
-    __tablename__ = 'user_quests'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    quest_id = db.Column(db.Integer, db.ForeignKey('quests.id'), nullable=False)
-    is_completed = db.Column(db.Boolean, default=False)
-    completed_at = db.Column(db.DateTime, nullable=True)
-    expires_at = db.Column(db.DateTime, nullable=True)
-
-    def __repr__(self):
-        return f'<UserQuest user={self.user_id} quest={self.quest_id}>'
 
 
 class Event(db.Model):

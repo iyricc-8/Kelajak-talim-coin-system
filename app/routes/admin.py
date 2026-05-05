@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_required, current_user
 from app import db
-from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting, Quest
-from app.forms import AwardCoinsForm, DeductCoinsForm, ProductForm, CategoryForm, AchievementForm, EditUserForm, EconomySettingsForm, QuestForm
+from app.models import User, Wallet, Transaction, Product, Category, Order, Achievement, UserAchievement, Notification, EconomySetting
+from app.forms import AwardCoinsForm, DeductCoinsForm, ProductForm, CategoryForm, AchievementForm, EditUserForm, EconomySettingsForm
 from app.services.coin_service import award_coins, deduct_coins
 from app.services.order_service import update_order_status
 from app.services.user_service import delete_user_account
@@ -563,55 +563,3 @@ def settings():
                            total_products=total_products,
                            total_txns=total_txns,
                            form=form)
-
-# -- Quests ------------------------------------------------
-@admin_bp.route('/quests')
-@admin_required
-def quests():
-    quests_list = Quest.query.all()
-    return render_template('admin/quests.html', quests=quests_list)
-
-@admin_bp.route('/quests/create', methods=['GET', 'POST'])
-@strict_admin
-def create_quest():
-    form = QuestForm()
-    if form.validate_on_submit():
-        q = Quest(
-            title=form.title.data,
-            description=form.description.data,
-            reward_coins=form.reward_coins.data or 0,
-            reward_xp=form.reward_xp.data or 0,
-            quest_type=form.quest_type.data,
-            is_active=form.is_active.data
-        )
-        db.session.add(q)
-        db.session.commit()
-        flash('Kvest yaratildi!', 'success')
-        return redirect(url_for('admin.quests'))
-    return render_template('admin/quest_form.html', form=form, title='Yangi kvest')
-
-@admin_bp.route('/quests/<int:id>/edit', methods=['GET', 'POST'])
-@strict_admin
-def edit_quest(id):
-    q = Quest.query.get_or_404(id)
-    form = QuestForm(obj=q)
-    if form.validate_on_submit():
-        q.title = form.title.data
-        q.description = form.description.data
-        q.reward_coins = form.reward_coins.data or 0
-        q.reward_xp = form.reward_xp.data or 0
-        q.quest_type = form.quest_type.data
-        q.is_active = form.is_active.data
-        db.session.commit()
-        flash('Kvest yangilandi!', 'success')
-        return redirect(url_for('admin.quests'))
-    return render_template('admin/quest_form.html', form=form, title="Kvestni tahrirlash", quest=q)
-
-@admin_bp.route('/quests/<int:id>/toggle', methods=['POST'])
-@strict_admin
-def toggle_quest(id):
-    q = Quest.query.get_or_404(id)
-    q.is_active = not q.is_active
-    db.session.commit()
-    flash(f'Kvest yangilandi.', 'info')
-    return redirect(url_for('admin.quests'))
